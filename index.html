@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alexis Brémond</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    const current = window.location.pathname.split("/").pop();
+
+    if (isMobile && current !== "projets.html") {
+      window.location.replace("projets.html");
+    } else if (!isMobile && current !== "index.html") {
+      window.location.replace("index.html");
+    }
+  });
+  </script>
+</head>
+
+
+
+<body>
+  <canvas id="mouse-trail-canvas"></canvas>
+
+  <div id="container">
+    <!-- Texte avec plusieurs images associées en data-images -->
+    <span class="text-item recent" data-images="images/frfr1.png, images/frfr2.png"><a href="https://ateliers.esad-pyrenees.fr/web/archives/2024-2025/3dgm/alexis/FRFR/index.html" target="_blank">Festival du Rhin</a></span>
+    <span class="text-item" data-images="images/memoire1.jpg,images/memoire2.jpg,images/memoire3.jpg,images/memoire4.jpg,images/memoire5.jpg,images/memoire6.jpg,images/memoire7.jpg,images/memoire8.jpg">Le déploiement d'une identité pour les musées d'art contemporain</span>
+    <span class="text-item" data-images="images/bv1.webp,images/bv2.webp">Bonnes vacances !</span>
+    <span class="text-item" data-images="images/mosaiqut1.webp,images/mosaiqut2.webp,images/mosaiqut3.webp">MosaïQut</span>
+    <span class="text-item" data-images="images/rumeurs1.webp,images/rumeurs2.webp,images/rumeurs3.webp,images/rumeurs4.webp,images/rumeurs5.webp">Rumeurs</span>
+    <span class="text-item" data-images="images/sundayrunner1.webp,images/sundayrunner2.webp,images/sundayrunner3.webp,images/sundayrunner4.webp,images/sundayrunner5.webp">Sunday Runner</span>
+    <span class="text-item" data-images="images/romanesque1.webp,images/romanesque2.webp,images/romanesque3.webp,images/romanesque4.webp,images/romanesque5.webp,images/romanesque6.webp,images/romanesque7.webp,images/romanesque8.webp,images/romanesque9.webp">Romanesque</span>
+    <span class="text-item no-image" data-images="">MicMacType</span>
+    <span class="text-item" data-images="images/cancan1.webp,images/cancan2.webp,images/cancan3.webp,images/cancan4.webp">Produire sans détruire</span>
+    <span class="text-item" data-images="images/fouilles1.webp,images/fouilles2.webp,images/fouilles3.webp,images/fouilles4.webp">Fouilles Géo·graphiques</span>
+    <span class="text-item" data-images="images/hem1.webp,images/hem2.webp,images/hem3.webp,images/hem4.webp,images/hem5.webp,images/hem6.webp,images/hem7.webp,images/hem8.webp,images/hem9.webp,images/hem10.webp">Une vie dédiée aux caractères&nbsp: Hans Eduard Meier</span>
+    <span class="text-item" data-images="images/carto1.webp,images/carto2.webp,images/carto3.webp,images/carto4.webp">Les châteaux du Médoc</span>
+    <span class="text-item" data-images="images/tenk1.webp,images/tenk2.webp,images/tenk3.webp">Festival Dokument</span>
+    <span class="text-item" data-images="images/agila1.jpg,images/agila2.webp">Agila</span>
+    <span class="text-item no-image" data-images="">Le stade comme terrain de jeu</span>
+    <span class="text-item" data-images="images/fifib1.webp">Festival International du Film Indépendant de Bordeaux (FIFIB)</span>
+    <span class="text-item" data-images="images/carrecol1.webp,images/carrecol2.webp,images/carrecol3.webp,images/carrecol4.webp">Scène Nationale du Carré Colonnes</span>
+    <span class="text-item" data-images="images/rega1.webp,images/rega2.webp">Réchauffement graphique</span>
+    <span class="text-item no-image" data-images="">Rencontres Photographique d'Arles</span>
+ 
+  </div>
+
+<img id="hover-image-homepage-a" class="hover-image" />
+<img id="hover-image-homepage-b" class="hover-image" />
+
+  <footer class="navbar">
+    <div class="col"><a href="index.html">Alexis Brémond</a></div>
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col"><a href="projets.html">Index</a></div>
+    <div class="col"><a href="AB_PORT.pdf" target="_blank">Portfolio</a></div>
+    <div class="col"><a href="https://www.instagram.com/aleqsou/" target="_blank">Instagram</a></div>
+    <div class="col">
+      <div id="toggle-eye" class="eye-off">
+        <div class="pupil"></div>
+      </div>
+    </div>
+  </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

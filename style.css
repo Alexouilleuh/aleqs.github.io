@@ -1,0 +1,316 @@
+body {
+  margin: 1em 1.5em 0em 1.5em;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  background: #fafafa;
+  position: relative;
+  height: 100vh;
+  cursor: default;
+  font-weight: 400;
+  font-family: sans-serif
+}
+
+a {
+  text-decoration: none;      /* enlève le soulignement */
+  color: inherit;             /* garde la couleur du texte environnant */
+}
+
+a:visited {
+  color: inherit;             /* même couleur après clic */
+  text-decoration: none;      /* pas de soulignement après clic non plus */
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+
+#mouse-trail-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0; /* derrière les textes */
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* pour ne pas bloquer les interactions */
+}
+
+
+#container {
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* on ne bloque rien */
+}
+
+
+.text-item {
+  position: absolute;
+  padding: 0px 0px; /* agrandit la zone hover sans changer l’apparence */
+  font-size: 0.85em;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  cursor: pointer;
+  pointer-events: auto;
+  white-space: nowrap;
+  user-select: none;
+  color: rgb(0, 0, 0);
+  z-index: 1;
+  mix-blend-mode: multiply;
+}
+
+.no-image {
+  color: rgb(175, 175, 175);
+  background: repeating-linear-gradient(45deg, /* Angle des bandes */ #fafafa 0px, /* Gris clair */ #fafafa 10px, #f2f2f2 10px, /* Blanc */ #f2f2f2 20px);
+  position: relative;
+}
+
+.recent {
+  color: rgb(0, 0, 0);
+  border: solid 1px rgb(0, 0, 0);
+  position: relative;
+}
+
+.hover-image {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+
+#hover-image-index {
+  position: fixed;
+  pointer-events: none; /* Pour que la souris puisse passer "à travers" */
+  top: 0;
+  left: 0;
+  transform: translate(0, 0);
+  opacity: 0;
+  max-width: 400px;
+  max-height: 400px;
+  z-index: 1000;
+  background-color: white;
+}
+
+
+#hover-image-homepage {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;       /* largeur fixe */
+  height: 500px;  /* hauteur max pour éviter trop grand */
+  object-fit: contain;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+#hover-image-homepage::before {
+  content: none !important;
+}
+
+#image-counter {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-family: sans-serif;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1000;
+}
+
+
+
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 1em;
+  width: 100%;
+  height: 3em;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  align-items: center;
+  justify-items: left;
+  background-color: transparent; /* pas de fond */
+  font-size: 1.5em;
+  z-index: 1000;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+/* Bas de page */
+.navbar:not(.top) {
+  bottom: 0;
+  background-color: transparent;
+  mix-blend-mode: multiply;
+}
+
+/* Haut de page */
+.navbar.top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10;
+  z-index: 999;
+  mix-blend-mode: multiply;
+}
+
+/* Activable individuellement */
+.navbar .col {
+  pointer-events: auto;
+  mix-blend-mode: difference;
+  mix-blend-mode: multiply;
+}
+
+.navbar .col:last-child{
+  justify-self: right;
+  margin-right: 1.25em;
+}
+
+.navbar.top .col .right {
+  justify-content: flex-end;
+}
+
+.navbar.top .col:first-child {
+  flex: 1;
+  text-align: center;
+}
+
+/* ------------------------------------ */
+/*               BOUTON.                */
+/* ------------------------------------ */
+
+
+#toggle-eye {
+  width: 35px;
+  height: 35px;
+  border: 1.5px solid black;
+  border-radius: 50%;
+  background-color: white;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  z-index: 1000;
+  pointer-events: auto;
+  box-sizing: border-box;
+  margin-right: 0.55em
+}
+
+.pupil {
+  width: 15px;
+  height: 15px;
+  background-color: black;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: top 0.1s, left 0.1s;
+  display: none; /* cachée quand désactivée */
+}
+
+/* Quand activé : on affiche la pupille */
+.eye-on .pupil {
+  display: block;
+}
+
+
+
+
+
+.project-row {
+  font-size: 0.80em;
+  color: rgb(0, 0, 0);
+  display: grid;
+  grid-template-columns: 1fr 2.5fr 0.5fr 1fr;
+  gap: 3em;
+  padding: 0.75em 0em;
+  border-bottom: 1px solid rgb(0, 0, 0);
+  transition: background-color 0.1s ease;
+}
+
+.project-row .col {
+  word-break: break-word;
+}
+
+
+.project-row:last-child {
+  margin: 4em;
+  border-bottom: none;
+  visibility: hidden;
+}
+
+
+.project-titles {
+  font-size: 0.7em;
+  padding: 3em 0.75em 0.75em 0em;
+  color: rgb(0, 0, 0);
+  display: grid;
+  grid-template-columns: 1fr 3fr 0.5fr 1fr;
+  border-bottom: 1px solid rgb(0, 0, 0);
+}
+
+.year-spacing {
+  padding: 1em 0.75em 0.75em 0em;
+  display: grid;
+  border-bottom: 1px solid rgb(0, 0, 0);
+}
+
+.project-row.no-image {
+  color: rgb(175, 175, 175);
+}
+
+#container-index {
+  visibility: visible;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+
+@media (max-width: 768px) {
+  body {
+    font-size: 0.9em;
+  }
+  .only-desktop {
+    display: none;
+  }
+  a {
+    font-size: 0.9em;
+  }
+  .navbar {
+    grid-template-columns:1fr ;
+  }
+  .project-row {
+    gap: 1.5em;
+    grid-template-columns: 1.3fr 0.3fr 1fr;
+  }
+  .project-row:hover {
+    background-color: rgb(237, 237, 237);
+  }
+}
