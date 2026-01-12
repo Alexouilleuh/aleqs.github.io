@@ -7,18 +7,23 @@
   <title>Alexis Brémond</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-    const current = window.location.pathname.split("/").pop();
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  const path = window.location.pathname;
 
-    if (isMobile && current !== "projets.html") {
-      window.location.replace("projets.html");
-    } else if (!isMobile && current !== "index.html") {
-      window.location.replace("index.html");
-    }
-  });
-  </script>
+  // 📱 MOBILE → projets.html
+  if (isMobile && !path.endsWith("projets.html")) {
+    window.location.replace("/projets.html");
+  }
+
+  // 🖥 DESKTOP → racine
+  if (!isMobile && path !== "/" && path !== "/index.html") {
+    window.location.replace("/");
+  }
+});
+</script>
+
 </head>
 
 
