@@ -68,7 +68,6 @@ a:hover {
   user-select: none;
   color: rgb(0, 0, 0);
   z-index: 1;
-  mix-blend-mode: multiply;
 }
 
 .no-image {
@@ -79,6 +78,7 @@ a:hover {
 
 .recent {
   color: rgb(0, 0, 0);
+  mix-blend-mode: multiply;
   border: solid 1px rgb(0, 0, 0);
   position: relative;
 }
@@ -125,45 +125,25 @@ a:hover {
   content: none !important;
 }
 
-#image-counter {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
-  font-family: sans-serif;
-  font-size: 14px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
-  z-index: 1000;
-}
 
 
 
 .navbar {
   position: fixed;
   bottom: 0;
-  left: 1em;
   width: 100%;
   height: 3em;
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  align-items: center;
-  justify-items: left;
-  font-size: 1.5em;
+  font-size: 1.25em;
   z-index: 1000;
   pointer-events: none;
-  height: 80px;
+}
+.navbar-grid {
+  display: grid;
+  grid-template-columns: 0.75fr 2fr 0.1fr 0.288fr 0.4fr;
+  gap: 3rem; /* ou px */
+  align-items: center;
 }
 
-/* Bas de page */
-.navbar:not(.top) {
-  bottom: 0;
-
-}
 /* Activable individuellement */
 .navbar .col {
   pointer-events: auto;
@@ -219,12 +199,9 @@ a:hover {
 .project-row {
   font-size: 0.80em;
   color: rgb(0, 0, 0);
-  display: grid;
-  grid-template-columns: 1fr 2.5fr 0.5fr 1fr;
-  gap: 3em;
   padding: 0.75em 0em;
   border-bottom: 1px solid rgb(0, 0, 0);
-  transition: background-color 0.1s ease;
+  transition: background-color 0.05s ease-in-out;
 }
 
 .project-row .col {
@@ -233,18 +210,30 @@ a:hover {
 
 
 .project-row:last-child {
-  margin: 4em;
+  margin: 3em;
   border-bottom: none;
   visibility: hidden;
 }
 
 
-.project-titles {
-  font-size: 0.7em;
-  padding: 3em 0.75em 0.75em 0em;
-  color: rgb(0, 0, 0);
+.project-grid {
   display: grid;
-  grid-template-columns: 1fr 3fr 0.5fr 1fr;
+  grid-template-columns: 0.6fr 0.1fr 2.5fr 0.75fr;
+  gap: 3rem; /* ou px */
+}
+
+.project-row {
+  font-size: 0.80em;
+}
+
+
+
+
+.project-titles {
+  font-size: 0.70em;
+  color: rgb(0, 0, 0);
+  padding-bottom: 0.70em;
+  margin-top: 3em;
   border-bottom: 1px solid rgb(0, 0, 0);
 }
 
@@ -289,4 +278,72 @@ a:hover {
   .project-row:hover {
     background-color: rgb(237, 237, 237);
   }
+}
+
+
+
+
+
+/* ------------------------------------ */
+/*               ALEXIS                 */
+/* ------------------------------------ */
+
+
+h1 {
+  font-size: 2.75em;
+  font-family: sans-serif;
+  font-weight: 400;
+  color: rgb(0, 0, 0);
+  text-align: center;
+}
+
+.alexis-grid {
+  display: grid;
+  grid-template-columns: 0.5fr 0.2fr 0.75fr 2.5fr;
+  gap: 3rem; /* ou px */
+}
+
+.alexis-titles {
+  font-size: 0.70em;
+  color: rgb(0, 0, 0);
+  padding-bottom: 0.70em;
+  margin-top: 3em;
+  border-bottom: 1px solid rgb(0, 0, 0);
+}
+
+
+/* ====================================
+   POPUP - Bloc texte rebondissant
+   ==================================== */
+
+.bouncing-popup {
+  position: fixed;
+  padding: 12px 16px;
+  color: white;
+  background: rgb(0, 0, 0);
+  border-radius: 2em;
+  border: 1px solid black;
+  font-size: 0.85em;
+  user-select: none;
+  cursor: pointer;
+  white-space: nowrap;
+  z-index: 999;
+  pointer-events: auto;
+}
+
+/* Variante avec bordure épaisse (optionnel) */
+.bouncing-popup--bold {
+  border: 2px solid black;
+  font-weight: 600;
+}
+
+/* Variante colorée (optionnel) */
+.bouncing-popup--colored {
+  background: repeating-linear-gradient(
+    45deg,
+    #fafafa 0px,
+    #fafafa 10px,
+    #f2f2f2 10px,
+    #f2f2f2 20px
+  );
 }

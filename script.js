@@ -10,6 +10,11 @@ let nextImageEl = imageB;
 
 const occupiedRects = [];
 
+// ===== ENREGISTREMENT DU TRACÉ =====
+let recordedTrail = [];
+let isRecording = false;
+const MAX_TRAIL_POINTS = 1000; // Limiter le nombre de points enregistrés
+
 // Fonction pour obtenir la hauteur de la navbar
 function getNavbarHeight() {
   const navbar = document.querySelector('.navbar');
@@ -205,7 +210,7 @@ resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
 let points = [];
-const maxLength = 5000;
+const maxLength = 7500;
 let trailActive = true;
 
 function getRandomPaleColor() {
@@ -232,9 +237,45 @@ function getTotalLength(pts) {
   return len;
 }
 
+// ===== ENREGISTREMENT DU TRACÉ =====
+function startRecording() {
+  isRecording = true;
+  recordedTrail = [];
+  console.log("🎨 Enregistrement du tracé démarré...");
+}
+
+function stopRecording() {
+  if (isRecording && recordedTrail.length > 0) {
+    isRecording = false;
+    
+    // Simplifier le tracé (garder 1 point sur 5 pour réduire la taille)
+    const simplifiedTrail = recordedTrail.filter((_, index) => index % 5 === 0);
+    
+    // Sauvegarder dans localStorage
+    try {
+      localStorage.setItem('mouseTrail', JSON.stringify(simplifiedTrail));
+      console.log(`✅ Tracé enregistré : ${simplifiedTrail.length} points`);
+    } catch (e) {
+      console.error("❌ Erreur lors de l'enregistrement du tracé:", e);
+    }
+  }
+}
+
 document.addEventListener("mousemove", (e) => {
   if (!trailActive) return;
+  
   points.push({ x: e.clientX, y: e.clientY, color: currentStrokeColor });
+  
+  // Enregistrer pour le replay
+  if (isRecording && recordedTrail.length < MAX_TRAIL_POINTS) {
+    recordedTrail.push({ 
+      x: e.clientX, 
+      y: e.clientY, 
+      color: currentStrokeColor,
+      timestamp: Date.now()
+    });
+  }
+  
   while (getTotalLength(points) > maxLength) {
     points.shift();
   }
@@ -278,9 +319,15 @@ toggleEye.addEventListener("click", () => {
     // Recentre la pupille
     pupil.style.top = "50%";
     pupil.style.left = "50%";
+    
+    // Arrêter l'enregistrement
+    stopRecording();
   } else {
     // Réinitialise le tracé quand on réactive
     points = [];
+    
+    // Démarrer l'enregistrement
+    startRecording();
   }
 });
 
@@ -309,12 +356,9 @@ window.addEventListener("mousemove", (e) => {
   pupil.style.top = `${relativeY}%`;
 });
 
-
-
 document.querySelectorAll('p').forEach(p => {
   p.innerHTML = p.innerHTML.replace(/ (\S+)$/, '&nbsp;$1');
 });
-
 
 // switch icons
 document.addEventListener("DOMContentLoaded", () => {
@@ -330,13 +374,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const imgA = new Image();
   const imgB = new Image();
 
-  let direction = 1; // 1 = blanc → noir, -1 = noir → blanc
+  let direction = 1;
   let progress = 0;
-  const fadeDuration = 8000; // vitesse du fondu (ms)
+  const fadeDuration = 8000;
   let lastTime = null;
 
-  imgA.src = icons[0]; // icon-b.ico
-  imgB.src = icons[1]; // icon-n.ico
+  imgA.src = icons[0];
+  imgB.src = icons[1];
 
   function animate(time) {
     if (!lastTime) lastTime = time;
@@ -367,4 +411,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   requestAnimationFrame(animate);
+  
+  // Démarrer l'enregistrement au chargement de la page
+  startRecording();
+});
+
+// ===== SAUVEGARDER LE TRACÉ EN QUITTANT LA PAGE =====
+window.addEventListener('beforeunload', () => {
+  stopRecording();
+});
+
+// ===== SAUVEGARDER LE TRACÉ EN CLIQUANT SUR UN LIEN =====
+document.querySelectorAll('a[href="alexis.html"]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    stopRecording();
+  });
 });
