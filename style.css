@@ -8,7 +8,14 @@ body {
   height: 100vh;
   cursor: default;
   font-weight: 400;
-  font-family: sans-serif
+  font-family: sans-serif;
+  break-inside: avoid;
+  page-break-inside: avoid;
+
+}
+
+.no-scroll {
+  overflow: hidden;
 }
 
 a {
@@ -146,40 +153,20 @@ a:hover {
   grid-template-columns: repeat(8, 1fr);
   align-items: center;
   justify-items: left;
-  background-color: transparent; /* pas de fond */
   font-size: 1.5em;
   z-index: 1000;
   pointer-events: none;
-  mix-blend-mode: multiply;
+  height: 80px;
 }
 
 /* Bas de page */
 .navbar:not(.top) {
   bottom: 0;
-  background-color: transparent;
-  mix-blend-mode: multiply;
-}
 
-/* Haut de page */
-.navbar.top {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 10;
-  z-index: 999;
-  mix-blend-mode: multiply;
 }
-
 /* Activable individuellement */
 .navbar .col {
   pointer-events: auto;
-  mix-blend-mode: difference;
-  mix-blend-mode: multiply;
 }
 
 .navbar .col:last-child{
@@ -187,14 +174,6 @@ a:hover {
   margin-right: 1.25em;
 }
 
-.navbar.top .col .right {
-  justify-content: flex-end;
-}
-
-.navbar.top .col:first-child {
-  flex: 1;
-  text-align: center;
-}
 
 /* ------------------------------------ */
 /*               BOUTON.                */
@@ -235,9 +214,6 @@ a:hover {
 .eye-on .pupil {
   display: block;
 }
-
-
-
 
 
 .project-row {

@@ -10,6 +10,25 @@ let nextImageEl = imageB;
 
 const occupiedRects = [];
 
+// Fonction pour obtenir la hauteur de la navbar
+function getNavbarHeight() {
+  const navbar = document.querySelector('.navbar');
+  return navbar ? navbar.offsetHeight : 0;
+}
+
+// Fonction pour calculer les marges de sécurité
+function getSafeZone() {
+  const margin = 20; // Marge de sécurité en pixels
+  const navbarHeight = getNavbarHeight();
+  
+  return {
+    top: margin,
+    right: margin,
+    bottom: navbarHeight + margin,
+    left: margin
+  };
+}
+
 function isOverlapping(rect) {
   return occupiedRects.some(r => {
     return !(
@@ -60,16 +79,23 @@ document.querySelectorAll(".text-item").forEach(span => {
   const spanWidth = span.offsetWidth;
   const spanHeight = span.offsetHeight;
 
-  const maxLeft = window.innerWidth - spanWidth;
-  const maxTop = window.innerHeight - spanHeight;
+  // Récupérer les zones de sécurité
+  const safeZone = getSafeZone();
+  
+  // Calculer les limites en tenant compte des safezones
+  const maxLeft = window.innerWidth - spanWidth - safeZone.right;
+  const maxTop = window.innerHeight - spanHeight - safeZone.bottom;
+  const minLeft = safeZone.left;
+  const minTop = safeZone.top;
 
   let left, top, rect;
   let tries = 0;
   const maxTries = 1000;
 
   do {
-    left = Math.random() * maxLeft;
-    top = Math.random() * maxTop;
+    // Générer une position aléatoire dans la zone sûre
+    left = minLeft + Math.random() * (maxLeft - minLeft);
+    top = minTop + Math.random() * (maxTop - minTop);
 
     rect = {
       left: left,
@@ -285,3 +311,60 @@ window.addEventListener("mousemove", (e) => {
 
 
 
+document.querySelectorAll('p').forEach(p => {
+  p.innerHTML = p.innerHTML.replace(/ (\S+)$/, '&nbsp;$1');
+});
+
+
+// switch icons
+document.addEventListener("DOMContentLoaded", () => {
+  const icons = ["icon-b.ico", "icon-n.ico"];
+  const favicon = document.getElementById("favicon");
+
+  const size = 32;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+
+  const imgA = new Image();
+  const imgB = new Image();
+
+  let direction = 1; // 1 = blanc → noir, -1 = noir → blanc
+  let progress = 0;
+  const fadeDuration = 8000; // vitesse du fondu (ms)
+  let lastTime = null;
+
+  imgA.src = icons[0]; // icon-b.ico
+  imgB.src = icons[1]; // icon-n.ico
+
+  function animate(time) {
+    if (!lastTime) lastTime = time;
+    const delta = time - lastTime;
+    lastTime = time;
+
+    progress += (delta / fadeDuration) * direction;
+
+    if (progress >= 1) {
+      progress = 1;
+      direction = -1;
+    } else if (progress <= 0) {
+      progress = 0;
+      direction = 1;
+    }
+
+    ctx.clearRect(0, 0, size, size);
+
+    ctx.globalAlpha = 1;
+    ctx.drawImage(imgA, 0, 0, size, size);
+
+    ctx.globalAlpha = progress;
+    ctx.drawImage(imgB, 0, 0, size, size);
+
+    favicon.href = canvas.toDataURL("image/png");
+
+    requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
+});

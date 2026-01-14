@@ -4,21 +4,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" id="favicon" type="image/ico" href="icon-j.ico">
   <title>Alexis Brémond</title>
+  <meta name="description" content="Portfolio de Alexis Brémond, étudiant et designer graphique collaborant avec des particuliers et des entités culturelles. Projets d'éditions, d'identité visuelle, d'objets imprimé, de dessin de caractères. Expérimentations visuelles et développement d'outils.">
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Alexis Brémond",
+  "url": "https://alexisbremond.fr",
+  "jobTitle": "Graphic designer",
+  "sameAs": [
+    "https://www.instagram.com/aleqsou",
+    "https://github.com/alexouilleuh",
+  ]
+}
+</script>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
   const path = window.location.pathname;
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
-  // 📱 MOBILE → projets.html
-  if (isMobile && !path.endsWith("projets.html")) {
-    window.location.replace("/projets.html");
+  // 1️⃣ Supprimer index.html de l’URL (PRIORITÉ ABSOLUE)
+  if (path === "/index.html") {
+    window.location.replace("/");
+    return;
   }
-
-  // 🖥 DESKTOP → racine
-  if (!isMobile && path !== "/" && path !== "/") {
+  // 2️⃣ Mobile → projets.html
+  if (isMobile && path !== "/projets.html") {
+    window.location.replace("/projets.html");
+    return;
+  }
+  // 3️⃣ Desktop → racine
+  if (!isMobile && path !== "/") {
     window.location.replace("/");
   }
 });
@@ -28,12 +50,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-<body>
+<body class="no-scroll">
   <canvas id="mouse-trail-canvas"></canvas>
 
   <div id="container">
     <!-- Texte avec plusieurs images associées en data-images -->
-    <span class="text-item recent" data-images="images/frfr1.png, images/frfr2.png"><a href="https://ateliers.esad-pyrenees.fr/web/archives/2024-2025/3dgm/alexis/FRFR/index.html" target="_blank">Festival du Rhin</a></span>
+    <span class="text-item recent" data-images="images/frfr1.png, images/frfr2.png"><a href="https://alexouilleuh.github.io/frfr/" target="_blank">Festival du Rhin</a></span>
     <span class="text-item" data-images="images/memoire1.jpg,images/memoire2.jpg,images/memoire3.jpg,images/memoire4.jpg,images/memoire5.jpg,images/memoire6.jpg,images/memoire7.jpg,images/memoire8.jpg">Le déploiement d'une identité pour les musées d'art contemporain</span>
     <span class="text-item" data-images="images/bv1.webp,images/bv2.webp">Bonnes vacances !</span>
     <span class="text-item" data-images="images/mosaiqut1.webp,images/mosaiqut2.webp,images/mosaiqut3.webp">MosaïQut</span>
