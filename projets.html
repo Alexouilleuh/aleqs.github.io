@@ -206,8 +206,10 @@ Ce projet vise à ouvir de nouveaux regards, faisant le lien entre l'histoire et
 let currentMouseX = 0;
 let currentMouseY = 0;
 
-// Capturer la position de la souris dès le chargement
+// Détection mobile
 const isMobileDevice = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+// Capturer la position de la souris dès le chargement
 if (!isMobileDevice) {
   document.addEventListener("mousemove", (e) => {
     currentMouseX = e.clientX;
@@ -219,14 +221,12 @@ if (!isMobileDevice) {
 function preloadImages() {
   return new Promise((resolve) => {
     const allImages = [];
-    
-    // Collecte toutes les images des projets
+
     document.querySelectorAll(".project-row").forEach(row => {
       const images = row.dataset.images?.split(",").map(img => img.trim()) || [];
       allImages.push(...images.filter(img => img !== ""));
     });
 
-    // Si pas d'images, résoudre immédiatement
     if (allImages.length === 0) {
       resolve();
       return;
@@ -237,14 +237,12 @@ function preloadImages() {
 
     allImages.forEach(src => {
       const img = new Image();
-      
       img.onload = img.onerror = () => {
         loadedCount++;
         if (loadedCount === totalImages) {
           resolve();
         }
       };
-      
       img.src = src;
     });
   });
@@ -253,51 +251,61 @@ function preloadImages() {
 // Initialisation
 async function init() {
   const hoverImage = document.getElementById("hover-image-index");
-  
-  // S'assurer que l'image est invisible et positionnée hors écran au départ
+
+  // Invisible au départ
   hoverImage.style.opacity = 0;
-  // Précharger toutes les images en arrière-plan (sans bloquer l'affichage)
-  preloadImages();
-  
-  // Initialiser la logique d'affichage immédiatement
+
+  // Préchargement des images
+  preloadImages().then(() => {
+    // Position initiale basée sur la souris au chargement
+    if (!isMobileDevice) {
+      const x = currentMouseX || window.innerWidth / 2;
+      const y = currentMouseY || window.innerHeight / 2;
+      positionImageAt(x, y);
+    }
+  });
+
   setupImageDisplay();
+}
+
+// Calcul unique de position
+function positionImageAt(x, y) {
+  const hoverImage = document.getElementById("hover-image-index");
+
+  const margin = 20;
+  const imageWidth = hoverImage.offsetWidth || 1000;
+  const imageHeight = hoverImage.offsetHeight || 1000;
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+
+  // Horizontal
+  let left = x + margin;
+  if (left + imageWidth > screenWidth) {
+    left = x - imageWidth - margin;
+  }
+
+  // Vertical adaptif
+  const ratio = y / screenHeight;
+  let top = y - imageHeight * ratio;
+  top = Math.max(margin, Math.min(top, screenHeight - imageHeight - margin));
+
+  hoverImage.style.left = `${left}px`;
+  hoverImage.style.top = `${top}px`;
 }
 
 function setupImageDisplay() {
   const hoverImage = document.getElementById("hover-image-index");
-  
   let intervalId = null;
-
-  // Détection mobile
   const isMobile = isMobileDevice;
 
   document.querySelectorAll(".project-row").forEach(row => {
     const images = row.dataset.images?.split(",").map(img => img.trim()) || [];
     let currentIndex = 0;
 
-    function showImage(index, x, y) {
-      // Ne charger l'image que si on a une position valide
-      if (x !== undefined && y !== undefined) {
-        const imgSrc = images[index];
-        hoverImage.src = imgSrc;
-        
-        
-        // Attendre que l'image soit chargée pour obtenir ses vraies dimensions
-        hoverImage.onload = () => {
-          // Positionner avec les vraies dimensions de l'image
-          if (!isMobile) {
-            moveImageWithCursor({ clientX: x, clientY: y });
-          }
-          
-          // Rendre visible une fois positionnée
-                hoverImage.style.opacity = 1;
-        };
-      }
-    }
-
     function startImageLoop() {
       if (intervalId) clearInterval(intervalId);
       if (images.length <= 1) return;
+
       intervalId = setInterval(() => {
         currentIndex = (currentIndex + 1) % images.length;
         hoverImage.src = images[currentIndex];
@@ -305,41 +313,28 @@ function setupImageDisplay() {
     }
 
     function moveImageWithCursor(e) {
-      const margin = 20;
-      const imageWidth = hoverImage.offsetWidth || 1000;
-      const imageHeight = hoverImage.offsetHeight || 1000;
-      const cursorX = e.clientX;
-      const cursorY = e.clientY;
-      const screenWidth = window.innerWidth;
-      const screenHeight = window.innerHeight;
-
-      // Horizontal
-      let left = cursorX + margin;
-      if (left + imageWidth > screenWidth) {
-        left = cursorX - imageWidth - margin;
-      }
-
-      // Vertical adaptif
-      const ratio = cursorY / screenHeight; 
-      let top = cursorY - imageHeight * ratio;
-      top = Math.max(margin, Math.min(top, screenHeight - imageHeight - margin));
-
-      hoverImage.style.left = `${left}px`;
-      hoverImage.style.top = `${top}px`;
+      positionImageAt(e.clientX, e.clientY);
     }
 
     if (!isMobile) {
       // Desktop
-      row.addEventListener("mouseenter", e => {
+      row.addEventListener("mouseenter", () => {
         if (images.length === 0) return;
+
         currentIndex = 0;
-        
-        // Utiliser la position actuelle de la souris (capturée globalement)
-        showImage(currentIndex, currentMouseX, currentMouseY);
+        hoverImage.src = images[currentIndex];
+        hoverImage.style.opacity = 1;
+
+        // Position initiale basée sur la souris mémorisée
+        positionImageAt(
+          currentMouseX || window.innerWidth / 2,
+          currentMouseY || window.innerHeight / 2
+        );
+
         startImageLoop();
       });
 
-      row.addEventListener("mousemove", e => {
+      row.addEventListener("mousemove", (e) => {
         if (images.length > 0) {
           moveImageWithCursor(e);
         }
@@ -355,6 +350,7 @@ function setupImageDisplay() {
 
       row.addEventListener("click", () => {
         if (images.length <= 1) return;
+
         currentIndex = (currentIndex + 1) % images.length;
         hoverImage.src = images[currentIndex];
         startImageLoop();
@@ -364,9 +360,10 @@ function setupImageDisplay() {
       // Mobile
       row.addEventListener("click", () => {
         if (images.length === 0) return;
+
         currentIndex = (currentIndex + 1) % images.length;
-        
         hoverImage.src = images[currentIndex];
+
         hoverImage.style.position = "fixed";
         hoverImage.style.left = "50%";
         hoverImage.style.top = "50%";
@@ -381,12 +378,12 @@ function setupImageDisplay() {
     }
   });
 
+  // Couleurs pastel
   function getRandomPastelColor() {
     const hue = Math.floor(Math.random() * 360);
     return `hsl(${hue}, 100%, 90%)`;
   }
 
-  // Couleur pastel pour ligne de projet
   if (!isMobile) {
     document.querySelectorAll(".project-row").forEach(row => {
       row.addEventListener("mouseenter", () => {
@@ -410,5 +407,6 @@ function setupImageDisplay() {
 
 // Lancer l'initialisation
 init();
+
 </script>
 </html>
