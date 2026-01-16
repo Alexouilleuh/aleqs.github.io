@@ -10,20 +10,20 @@ let nextImageEl = imageB;
 
 const occupiedRects = [];
 
-// ===== ENREGISTREMENT DU TRACÉ =====
+// enregistrement du tracé de la souris
 let recordedTrail = [];
 let isRecording = false;
-const MAX_TRAIL_POINTS = 1000; // Limiter le nombre de points enregistrés
+const MAX_TRAIL_POINTS = 3000; // max points
 
-// Fonction pour obtenir la hauteur de la navbar
+// avoir navbar height pour la safe zone
 function getNavbarHeight() {
   const navbar = document.querySelector('.navbar');
   return navbar ? navbar.offsetHeight : 0;
 }
 
-// Fonction pour calculer les marges de sécurité
+// calculer les marges de la safezone
 function getSafeZone() {
-  const margin = 20; // Marge de sécurité en pixels
+  const margin = 20; // safezone en px
   const navbarHeight = getNavbarHeight();
   
   return {
@@ -65,7 +65,7 @@ function normalizeImageSize(img) {
   }
 }
 
-// Précharge images
+// précharge images
 document.querySelectorAll(".text-item").forEach(span => {
   const images = span.dataset.images.split(",").map(i => i.trim());
   images.forEach(src => {
@@ -83,11 +83,9 @@ document.querySelectorAll(".text-item").forEach(span => {
 
   const spanWidth = span.offsetWidth;
   const spanHeight = span.offsetHeight;
-
-  // Récupérer les zones de sécurité
   const safeZone = getSafeZone();
   
-  // Calculer les limites en tenant compte des safezones
+  // calcul des limites + safezone
   const maxLeft = window.innerWidth - spanWidth - safeZone.right;
   const maxTop = window.innerHeight - spanHeight - safeZone.bottom;
   const minLeft = safeZone.left;
@@ -98,7 +96,7 @@ document.querySelectorAll(".text-item").forEach(span => {
   const maxTries = 1000;
 
   do {
-    // Générer une position aléatoire dans la zone sûre
+    // position aléatoire dans la zone
     left = minLeft + Math.random() * (maxLeft - minLeft);
     top = minTop + Math.random() * (maxTop - minTop);
 
@@ -193,7 +191,7 @@ document.querySelectorAll(".text-item").forEach(span => {
 
 container.style.visibility = "visible";
 
-// ===== Mouse trail =====
+// tracé de la souris
 const canvas = document.getElementById("mouse-trail-canvas");
 const ctx = canvas.getContext("2d");
 
@@ -237,26 +235,26 @@ function getTotalLength(pts) {
   return len;
 }
 
-// ===== ENREGISTREMENT DU TRACÉ =====
+// enregistrer le tracé
 function startRecording() {
   isRecording = true;
   recordedTrail = [];
-  console.log("🎨 Enregistrement du tracé démarré...");
+  console.log("enregistrement du tracé démarré...");
 }
 
 function stopRecording() {
   if (isRecording && recordedTrail.length > 0) {
     isRecording = false;
     
-    // Simplifier le tracé (garder 1 point sur 5 pour réduire la taille)
-    const simplifiedTrail = recordedTrail.filter((_, index) => index % 5 === 0);
+    // Simplifier le tracé (garder  point sur 3 pour réduire la taille)
+    const simplifiedTrail = recordedTrail.filter((_, index) => index % 3 === 0);
     
-    // Sauvegarder dans localStorage
+    // sauvegarder dans localStorage
     try {
       localStorage.setItem('mouseTrail', JSON.stringify(simplifiedTrail));
-      console.log(`✅ Tracé enregistré : ${simplifiedTrail.length} points`);
+      console.log(`tracé enregistré : ${simplifiedTrail.length} points`);
     } catch (e) {
-      console.error("❌ Erreur lors de l'enregistrement du tracé:", e);
+      console.error("erreur lors de l'enregistrement du tracé:", e);
     }
   }
 }
@@ -266,7 +264,7 @@ document.addEventListener("mousemove", (e) => {
   
   points.push({ x: e.clientX, y: e.clientY, color: currentStrokeColor });
   
-  // Enregistrer pour le replay
+  // enregistrer pour le replay
   if (isRecording && recordedTrail.length < MAX_TRAIL_POINTS) {
     recordedTrail.push({ 
       x: e.clientX, 
@@ -299,7 +297,7 @@ function draw() {
 }
 draw();
 
-// ===== Eye toggle =====
+// eye
 const toggleEye = document.getElementById("toggle-eye");
 const pupil = toggleEye.querySelector(".pupil");
 let activated = true;
@@ -316,17 +314,16 @@ toggleEye.addEventListener("click", () => {
   trailActive = activated;
 
   if (!activated) {
-    // Recentre la pupille
     pupil.style.top = "50%";
     pupil.style.left = "50%";
     
-    // Arrêter l'enregistrement
+    // stop l'enregistrement
     stopRecording();
   } else {
-    // Réinitialise le tracé quand on réactive
+    // reset le tracé quand on réactive
     points = [];
     
-    // Démarrer l'enregistrement
+    // démarrer l'enregistrement
     startRecording();
   }
 });
@@ -356,74 +353,30 @@ window.addEventListener("mousemove", (e) => {
   pupil.style.top = `${relativeY}%`;
 });
 
-document.querySelectorAll('p').forEach(p => {
-  p.innerHTML = p.innerHTML.replace(/ (\S+)$/, '&nbsp;$1');
-});
-
-// switch icons
+// démarrer l'enregistrement au chargement de la page
 document.addEventListener("DOMContentLoaded", () => {
-  const icons = ["icon-b.ico", "icon-n.ico"];
-  const favicon = document.getElementById("favicon");
-
-  const size = 32;
-  const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext("2d");
-
-  const imgA = new Image();
-  const imgB = new Image();
-
-  let direction = 1;
-  let progress = 0;
-  const fadeDuration = 8000;
-  let lastTime = null;
-
-  imgA.src = icons[0];
-  imgB.src = icons[1];
-
-  function animate(time) {
-    if (!lastTime) lastTime = time;
-    const delta = time - lastTime;
-    lastTime = time;
-
-    progress += (delta / fadeDuration) * direction;
-
-    if (progress >= 1) {
-      progress = 1;
-      direction = -1;
-    } else if (progress <= 0) {
-      progress = 0;
-      direction = 1;
-    }
-
-    ctx.clearRect(0, 0, size, size);
-
-    ctx.globalAlpha = 1;
-    ctx.drawImage(imgA, 0, 0, size, size);
-
-    ctx.globalAlpha = progress;
-    ctx.drawImage(imgB, 0, 0, size, size);
-
-    favicon.href = canvas.toDataURL("image/png");
-
-    requestAnimationFrame(animate);
+  // check si index.html en regardant si le container existe
+  const container = document.getElementById("container");
+  if (container) {
+    startRecording();
   }
-
-  requestAnimationFrame(animate);
-  
-  // Démarrer l'enregistrement au chargement de la page
-  startRecording();
 });
 
-// ===== SAUVEGARDER LE TRACÉ EN QUITTANT LA PAGE =====
+// save si on quitte la page
 window.addEventListener('beforeunload', () => {
   stopRecording();
 });
 
-// ===== SAUVEGARDER LE TRACÉ EN CLIQUANT SUR UN LIEN =====
+// save si on clique sur un lien
 document.querySelectorAll('a[href="alexis.html"]').forEach(link => {
   link.addEventListener('click', (e) => {
     stopRecording();
   });
+});
+
+
+
+//  ??
+document.querySelectorAll('p').forEach(p => {
+  p.innerHTML = p.innerHTML.replace(/ (\S+)$/, '&nbsp;$1');
 });

@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" id="favicon" type="image/ico" href="icon-j.ico">
   <title>Alexis Brémond</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -182,18 +183,19 @@ Ce projet vise à ouvir de nouveaux regards, faisant le lien entre l'histoire et
 </div>
 
 </div>
-<!-- Ajoute ici d'autres stages -->
-
   </main>
 
   <footer class="navbar navbar-grid">
     <div class="col"><a href="alexis.html">Alexis Brémond</a></div>
     <div class="col"><a href="index.html">←</a></div>
     <div class="col"><a href="AB_PORT.pdf" target="_blank">Portfolio</a></div>
-    <div class="col"><a href="https://www.instagram.com/aleqsou/" target="_blank">Instagram</a></div>
-    <div class="col"></div>
+    <div class="col last-col-group">
+      <a href="https://www.instagram.com/aleqsou/" target="_blank">Instagram</a>
+      <div class="col"></div>
+    </div>
   </footer>
-
+<script src="script.js"></script>
+<script src="favicon.js"></script>
 </body>
 
 
@@ -203,7 +205,7 @@ Ce projet vise à ouvir de nouveaux regards, faisant le lien entre l'histoire et
 const hoverImage = document.getElementById("hover-image-index");
 let intervalId = null;
 
-// Détection mobile
+// détection mobile
 const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
 document.querySelectorAll(".project-row").forEach(row => {
@@ -220,7 +222,7 @@ document.querySelectorAll(".project-row").forEach(row => {
     intervalId = setInterval(() => {
       currentIndex = (currentIndex + 1) % images.length;
       showImage(currentIndex);
-    }, 3000); // toutes les 3 secondes
+    }, 3000); // change l'image toutes les 3 secondes
   }
 
   function moveImageWithCursor(e) {
@@ -232,13 +234,13 @@ document.querySelectorAll(".project-row").forEach(row => {
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
 
-    // Horizontal
+    // horizontal
     let left = cursorX + margin;
     if (left + imageWidth > screenWidth) {
       left = cursorX - imageWidth - margin;
     }
 
-    // Vertical progressif
+    // vertical adaptif
     const ratio = cursorY / screenHeight; 
     let top = cursorY - imageHeight * ratio;
     top = Math.max(margin, Math.min(top, screenHeight - imageHeight - margin));
@@ -248,7 +250,7 @@ document.querySelectorAll(".project-row").forEach(row => {
   }
 
   if (!isMobile) {
-    // === Desktop ===
+    // si desktop
     row.addEventListener("mouseenter", e => {
       if (images.length === 0) return;
       currentIndex = 0;
@@ -280,33 +282,34 @@ document.querySelectorAll(".project-row").forEach(row => {
     });
 
   } else {
-    // === Mobile ===
+    // si mobile
     row.addEventListener("click", () => {
       if (images.length === 0) return;
       currentIndex = (currentIndex + 1) % images.length;
       showImage(currentIndex);
 
-      // Affiche l’image centrée
       hoverImage.style.position = "fixed";
       hoverImage.style.left = "50%";
       hoverImage.style.top = "50%";
       hoverImage.style.transform = "translate(-50%, -50%)";
-      hoverImage.style.maxWidth = "50%";
-      hoverImage.style.maxHeight = "50%";
+      hoverImage.style.maxWidth = "70%";
+      hoverImage.style.maxHeight = "70%";
       hoverImage.style.zIndex = "100";
 
-      startImageLoop(); // démarre ou redémarre le timer
+      startImageLoop(); // démarre/redémarre le timer
     });
   }
 });
 
-// === Partie fond pastel (uniquement desktop) ===
-if (!isMobile) {
+
   function getRandomPastelColor() {
     const hue = Math.floor(Math.random() * 360);
     return `hsl(${hue}, 100%, 90%)`;
   }
 
+
+// couleur pastel pour ligne de projet sur desktop
+if (!isMobile) {
   document.querySelectorAll(".project-row").forEach(row => {
     row.addEventListener("mouseenter", () => {
       row.dataset.originalBg = row.style.backgroundColor || "";
@@ -318,8 +321,14 @@ if (!isMobile) {
     });
   });
 }
+else {
+  document.querySelectorAll(".project-row").forEach(row => {
+    row.addEventListener("click", () => {
+      row.dataset.originalBg = row.style.backgroundColor || "";
+      row.style.backgroundColor = getRandomPastelColor();
+    });
+  });
+}
+
 </script>
-
-
-
 </html>

@@ -4,12 +4,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" id="favicon" type="image/ico" href="icon-j.ico">
   <title>Alexis Brémond</title>
   <link rel="stylesheet" href="style.css"/>
   <script src="popup.js"></script>
 </head>
 
-<body class="no-scroll">
+<body class="">
   <canvas id="mouse-trail-canvas"></canvas>
 
 <div class="bouncing-popup"><a href="mailto:alexbrem04@gmail.com">Hey !</a></div>
@@ -70,11 +71,12 @@ propres au sport.</div>
 </div>
 
 <div class="alexis-grid project-titles">
-  <div>Expériences</div>
-  <div>Année</div>
-  <div>Lieu</div>
-  <div>Contenu</div>
+  <div class="col">Expériences</div>
+  <div class="col">Année</div>
+  <div class="col">Lieu</div>
+  <div class="col">Contenu</div>
 </div>
+
 <div class="alexis-grid project-row" data-images="images/1_mont.svg, images/frfr1.png, images/frfr2.png">
   <div class="col">Freelance</div>
   <div class="col">depuis 2021  </div>
@@ -111,9 +113,12 @@ Zack Nani, Siriela, Toronto FC, Parempuyre FC, Evoza Esport, et d'autres.</div>
     <div class="col"><a href="index.html">←</a></div>
     <div class="col"><a href="projets.html">Index</a></div>
     <div class="col"><a href="AB_PORT.pdf" target="_blank">Portfolio</a></div>
-    <div class="col"><a href="https://www.instagram.com/aleqsou/" target="_blank">Instagram</a></div>
-    <div class="col"></div>
-  </div>
+    <div class="col last-col-group">
+      <a href="https://www.instagram.com/aleqsou/" target="_blank">Instagram</a>
+      <div class="col"></div>
+    </div>
   </footer>
+  <script src="script.js"></script>
+  <script src="favicon.js"></script>
   </body>
   </html>  

@@ -29,19 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const path = window.location.pathname;
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
-  // 1️⃣ Supprimer index.html de l’URL (PRIORITÉ ABSOLUE)
-  if (path === "/index.html") {
-    window.location.replace("/");
-    return;
-  }
-  // 2️⃣ Mobile → projets.html
+  // si mobile → projets.html
   if (isMobile && path !== "/projets.html") {
     window.location.replace("/projets.html");
     return;
-  }
-  // 3️⃣ Desktop → racine
-  if (!isMobile && path !== "/") {
-    window.location.replace("/");
   }
 });
 </script>
@@ -54,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
   <canvas id="mouse-trail-canvas"></canvas>
 
   <div id="container">
-    <!-- Texte avec plusieurs images associées en data-images -->
     <span class="text-item recent" data-images="images/frfr1.png, images/frfr2.png"><a href="https://alexouilleuh.github.io/frfr/" target="_blank">Festival du Rhin</a></span>
     <span class="text-item" data-images="images/memoire1.jpg,images/memoire2.jpg,images/memoire3.jpg,images/memoire4.jpg,images/memoire5.jpg,images/memoire6.jpg,images/memoire7.jpg,images/memoire8.jpg">Le déploiement d'une identité pour les musées d'art contemporain</span>
     <span class="text-item" data-images="images/bv1.webp,images/bv2.webp">Bonnes vacances !</span>
@@ -84,16 +74,16 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="col"><a href="alexis.html">Alexis Brémond</a></div>
     <div class="col"><a href="projets.html">Index</a></div>
     <div class="col"><a href="AB_PORT.pdf" target="_blank">Portfolio</a></div>
-    <div class="col"><a href="https://www.instagram.com/aleqsou/" target="_blank">Instagram</a></div>
-    <div class="col">
+    <div class="col last-col-group">
+      <a href="https://www.instagram.com/aleqsou/" target="_blank">Instagram</a>
+      <div class="col">
       <div id="toggle-eye" class="eye-off">
         <div class="pupil"></div>
       </div>
     </div>
-  </div>
   </footer>
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
+<script src="favicon.js"></script>
 </body>
 
 </html>

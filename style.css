@@ -1,9 +1,8 @@
 body {
-  margin: 1em 1.5em 0em 1.5em;
+  margin: 0em 1em 0em 1em;
   padding: 0;
   overflow-x: hidden;
   overflow-y: scroll;
-  background: #fafafa;
   position: relative;
   height: 100vh;
   cursor: default;
@@ -11,7 +10,6 @@ body {
   font-family: sans-serif;
   break-inside: avoid;
   page-break-inside: avoid;
-
 }
 
 .no-scroll {
@@ -19,30 +17,28 @@ body {
 }
 
 a {
-  text-decoration: none;      /* enlève le soulignement */
-  color: inherit;             /* garde la couleur du texte environnant */
+  text-decoration: none;
+  color: inherit;
 }
 
 a:visited {
-  color: inherit;             /* même couleur après clic */
-  text-decoration: none;      /* pas de soulignement après clic non plus */
+  color: inherit;
+  text-decoration: none;
 }
 
 a:hover {
   text-decoration: none;
 }
 
-
 #mouse-trail-canvas {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 0; /* derrière les textes */
+  z-index: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* pour ne pas bloquer les interactions */
+  pointer-events: none;
 }
-
 
 #container {
   visibility: hidden;
@@ -51,16 +47,13 @@ a:hover {
   left: 0;
   width: 100vw;
   height: 100vh;
-  pointer-events: none; /* on ne bloque rien */
+  pointer-events: none;
 }
-
 
 .text-item {
   position: absolute;
-  padding: 0px 0px; /* agrandit la zone hover sans changer l’apparence */
   font-size: 0.85em;
-  padding: 12px 16px;
-  margin-bottom: 16px;
+  padding: 0.75em;
   box-sizing: border-box;
   cursor: pointer;
   pointer-events: auto;
@@ -72,7 +65,7 @@ a:hover {
 
 .no-image {
   color: rgb(175, 175, 175);
-  background: repeating-linear-gradient(45deg, /* Angle des bandes */ #fafafa 0px, /* Gris clair */ #fafafa 10px, #f2f2f2 10px, /* Blanc */ #f2f2f2 20px);
+  background: repeating-linear-gradient(45deg, #fafafa 0px, #fafafa 10px, #f2f2f2 10px, #f2f2f2 20px);
   position: relative;
 }
 
@@ -93,10 +86,9 @@ a:hover {
   z-index: 2;
 }
 
-
 #hover-image-index {
   position: fixed;
-  pointer-events: none; /* Pour que la souris puisse passer "à travers" */
+  pointer-events: none;
   top: 0;
   left: 0;
   transform: translate(0, 0);
@@ -107,14 +99,13 @@ a:hover {
   background-color: white;
 }
 
-
 #hover-image-homepage {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 500px;       /* largeur fixe */
-  height: 500px;  /* hauteur max pour éviter trop grand */
+  width: 500px;
+  height: 500px;
   object-fit: contain;
   opacity: 0;
   z-index: 1;
@@ -125,42 +116,50 @@ a:hover {
   content: none !important;
 }
 
-
-
-
 .navbar {
   position: fixed;
   bottom: 0;
-  width: 100%;
   height: 3em;
+  left: 0.8em;
+  width: calc(100% - 1.6em);
   font-size: 1.25em;
   z-index: 1000;
   pointer-events: none;
 }
+
+.navbar a {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
 .navbar-grid {
   display: grid;
-  grid-template-columns: 0.75fr 2fr 0.1fr 0.288fr 0.4fr;
-  gap: 3rem; /* ou px */
+  grid-template-columns:  0.64fr 0.4fr 2.35fr 0.75fr;
+  gap: 2.5rem;
   align-items: center;
 }
 
-/* Activable individuellement */
 .navbar .col {
   pointer-events: auto;
 }
 
-.navbar .col:last-child{
-  justify-self: right;
-  margin-right: 1.25em;
+
+.navbar .col :nth-child(3) {
+  justify-content: right;
 }
 
 
-/* ------------------------------------ */
-/*               BOUTON.                */
-/* ------------------------------------ */
-
+.last-col-group {
+  grid-column: 4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 #toggle-eye {
+  bottom: auto;
+  transform: none;
   width: 35px;
   height: 35px;
   border: 1.5px solid black;
@@ -172,8 +171,6 @@ a:hover {
   overflow: hidden;
   z-index: 1000;
   pointer-events: auto;
-  box-sizing: border-box;
-  margin-right: 0.55em
 }
 
 .pupil {
@@ -187,14 +184,12 @@ a:hover {
   transform: translate(-50%, -50%);
   pointer-events: none;
   transition: top 0.1s, left 0.1s;
-  display: none; /* cachée quand désactivée */
+  display: none;
 }
 
-/* Quand activé : on affiche la pupille */
 .eye-on .pupil {
   display: block;
 }
-
 
 .project-row {
   font-size: 0.80em;
@@ -208,26 +203,17 @@ a:hover {
   word-break: break-word;
 }
 
-
 .project-row:last-child {
   margin: 3em;
   border-bottom: none;
   visibility: hidden;
 }
 
-
 .project-grid {
   display: grid;
-  grid-template-columns: 0.6fr 0.1fr 2.5fr 0.75fr;
-  gap: 3rem; /* ou px */
+  grid-template-columns: 0.64fr 0.4fr 2.35fr 0.75fr;
+  gap: 2.5rem;
 }
-
-.project-row {
-  font-size: 0.80em;
-}
-
-
-
 
 .project-titles {
   font-size: 0.70em;
@@ -256,39 +242,6 @@ a:hover {
   height: 100%;
 }
 
-
-
-@media (max-width: 768px) {
-  body {
-    font-size: 0.9em;
-  }
-  .only-desktop {
-    display: none;
-  }
-  a {
-    font-size: 0.9em;
-  }
-  .navbar {
-    grid-template-columns:1fr ;
-  }
-  .project-row {
-    gap: 1.5em;
-    grid-template-columns: 1.3fr 0.3fr 1fr;
-  }
-  .project-row:hover {
-    background-color: rgb(237, 237, 237);
-  }
-}
-
-
-
-
-
-/* ------------------------------------ */
-/*               ALEXIS                 */
-/* ------------------------------------ */
-
-
 h1 {
   font-size: 2.75em;
   font-family: sans-serif;
@@ -297,10 +250,20 @@ h1 {
   text-align: center;
 }
 
+h2 {
+  font-size: 10em;
+  font-family: sans-serif;
+  font-weight: 400;
+  color: rgb(0, 0, 0);
+  text-align: center;
+  top: 50%;
+}
+
+
 .alexis-grid {
   display: grid;
-  grid-template-columns: 0.5fr 0.2fr 0.75fr 2.5fr;
-  gap: 3rem; /* ou px */
+  grid-template-columns: 0.64fr 0.4fr 0.75fr 2.35fr;
+  gap: 2.5rem;
 }
 
 .alexis-titles {
@@ -310,11 +273,6 @@ h1 {
   margin-top: 3em;
   border-bottom: 1px solid rgb(0, 0, 0);
 }
-
-
-/* ====================================
-   POPUP - Bloc texte rebondissant
-   ==================================== */
 
 .bouncing-popup {
   position: fixed;
@@ -331,19 +289,157 @@ h1 {
   pointer-events: auto;
 }
 
-/* Variante avec bordure épaisse (optionnel) */
-.bouncing-popup--bold {
-  border: 2px solid black;
-  font-weight: 600;
+/* ====================================
+   tablaaaaate (769px - 1024px)
+   ==================================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+  .navbar {
+    font-size: 1.1em;
+  }
+
+  .navbar-grid {
+    gap: 1.7rem;
+    grid-template-columns: 0.55fr 0.4fr 1.75fr 0.6fr;
+
+  }
+
+  .project-grid {
+    grid-template-columns: 0.55fr 0.4fr 1.75fr 0.6fr;
+    gap: 1.7rem;
+  }
+
+
+  .alexis-grid {
+    grid-template-columns: 0.55fr 0.4fr 0.6fr 1.75fr;
+    gap: 1.7rem;
+  }
+
+  #hover-image-index {
+    max-width: 350px;
+    max-height: 350px;
+  }
+
+  h1 {
+    font-size: 2.2em;
+  }
+
+  .text-item {
+    font-size: 0.82em;
+  }
+
+  .project-titles,
+  .alexis-titles {
+    margin-top: 2em;
+  }
+
+  .project-row:last-child {
+    margin: 2.5em;
+  }
+
+  #toggle-eye {
+    display: none;
+  }
+
+  .pupil {
+    display: none;
+  }
 }
 
-/* Variante colorée (optionnel) */
-.bouncing-popup--colored {
-  background: repeating-linear-gradient(
-    45deg,
-    #fafafa 0px,
-    #fafafa 10px,
-    #f2f2f2 10px,
-    #f2f2f2 20px
-  );
+/* ====================================
+   mobile (< 768px)
+   ==================================== */
+@media (max-width: 768px) {
+  body {
+    font-size: 0.85em;
+  }
+
+  .only-desktop {
+    display: none;
+  }
+
+  .navbar {
+    background: none;
+    height: 2.5em;
+    font-size: 1.25em;
+  }
+
+  .navbar-grid {
+    grid-template-columns: 1.5fr 0.6fr 0.7fr;
+    background: none;
+    gap: 0.5rem;
+  }
+
+  .navbar-grid > :nth-child(n+4) {
+    display: none;
+  }
+
+  .project-grid {
+    grid-template-columns: 1.5fr 0.6fr 0.7fr;
+    gap: 0.5em;
+  }
+
+  .project-titles {
+    margin-top: 1.5em;
+    grid-template-columns: 1.5fr 0.6fr 0.7fr;
+  }
+
+  .project-titles > :nth-child(3) {
+    display: none;
+  }
+
+  .year-spacing {
+    padding: 1em 0.75em 0.75em 0em;
+  }
+
+  #hover-image-index {
+    max-width: 85vw;
+    max-height: 85vh;
+  }
+
+  .hover-image {
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+
+  h1 {
+    font-size: 1.35em;
+    margin: 0.75em 0.25em;
+  }
+
+  .alexis-grid {
+    grid-template-columns: 1.5fr 0.6fr 0.7fr;
+    gap: 0.5em;
+  }
+
+
+  .alexis-grid > :nth-child(4) {
+    display: none;
+  }
+
+  #popup-trail-canvas {
+    display: none;
+  }
+
+  .bouncing-popup {
+    display: none;
+  }
+
+  .text-item {
+    font-size: 0.8em;
+  }
+}
+
+
+/* accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .pupil {
+    transition: none !important;
+  }
 }

@@ -1,14 +1,9 @@
-/* ====================================
-   POPUP.JS - Suit le tracé de la souris enregistré
-   ==================================== */
-
 (function() {
   'use strict';
 
-  // ===== CONFIGURATION =====
   const CONFIG = {
-    constantSpeed: 0.5, // Vitesse constante en pixels par frame
-    fallbackSpeed: 0.5, // Vitesse si pas de tracé (rebond)
+    constantSpeed: 0.5, // vitesse constante en pixels par frame
+    fallbackSpeed: 0.5, // vitesse si pas de tracé (rebond)
     selector: '.bouncing-popup',
     trailLineWidth: 50,
     trailMaxLength: 30000, // Longueur maximale du tracé visible (en pixels)
@@ -16,7 +11,7 @@
     bounceVariation: 0.3
   };
 
-  // ===== ÉTAT =====
+  // depart
   let state = {
     x: 0,
     y: 0,
@@ -30,14 +25,15 @@
     trailPoints: [],
     currentStrokeColor: getRandomPaleColor(),
     
-    // Données du tracé enregistré
+    // données du tracé enregistré
     recordedTrail: null,
     currentTargetIndex: 0,
     distanceTraveled: 0,
-    playbackMode: false // true = suit le tracé, false = rebondit
+    playbackMode: false, // true = suit le tracé, false = rebondit
+    movingForward: true, // true = avance dans le tracé, false = recule
   };
 
-  // ===== UTILITAIRES =====
+  // tools/infos
   function getRandomPaleColor() {
     const r = 190 + Math.floor(Math.random() * 55);
     const g = 190 + Math.floor(Math.random() * 55);
@@ -68,26 +64,26 @@
     return newVelocity;
   }
 
-  // ===== CHARGEMENT DU TRACÉ =====
+  // charger le tracé
   function loadRecordedTrail() {
     try {
       const saved = localStorage.getItem('mouseTrail');
       if (saved) {
         state.recordedTrail = JSON.parse(saved);
         state.playbackMode = true;
-        console.log(`✅ Tracé chargé : ${state.recordedTrail.length} points`);
-        console.log(`🎬 Le popup va suivre votre tracé de la page d'accueil !`);
+        console.log(`tracé chargé : ${state.recordedTrail.length} points`);
+        console.log(`le popup va suivre votre tracé`);
         return true;
       }
     } catch (e) {
-      console.error("❌ Erreur lors du chargement du tracé:", e);
+      console.error("erreur lors du chargement du tracé:", e);
     }
     
-    console.log("⚠️ Pas de tracé enregistré, mode rebond activé");
+    console.log("pas de tracé enregistré, mode rebond activé");
     return false;
   }
 
-  // ===== CRÉATION DU CANVAS =====
+  // canvas
   function createCanvas() {
     let canvas = document.getElementById(CONFIG.canvasId);
     
@@ -120,7 +116,7 @@
     state.ctx.scale(dpr, dpr);
   }
 
-  // ===== DESSIN DU TRACÉ =====
+  // dessin
   function drawTrail() {
     state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
     
@@ -138,7 +134,7 @@
     }
   }
 
-  // ===== INITIALISATION =====
+  // init
   function init() {
     state.block = document.querySelector(CONFIG.selector);
     
@@ -178,17 +174,17 @@
     window.addEventListener('resize', handleResize);
   }
 
-  // ===== ANIMATION =====
+  // animation
   function animate() {
     if (state.playbackMode && state.recordedTrail) {
-      // MODE: Suivre le tracé enregistré
+      // mode: suivre le tracé enregistré
       animateFollowTrail();
     } else {
-      // MODE: Rebondir
+      // mode: sebondir
       animateBounce();
     }
 
-    // Dessiner le tracé
+    // dessiner le tracé
     drawTrail();
     requestAnimationFrame(animate);
   }
@@ -196,7 +192,6 @@
   function animateFollowTrail() {
     if (state.recordedTrail.length === 0) return;
     
-    // Point actuel et point cible
     const currentCenter = {
       x: state.x + state.width / 2,
       y: state.y + state.height / 2
@@ -204,30 +199,55 @@
     
     let targetPoint = state.recordedTrail[state.currentTargetIndex];
     
-    // Calculer la distance jusqu'au point cible
+    // calculer la distance jusqu'au point (prochaine position)
     const dx = targetPoint.x - currentCenter.x;
     const dy = targetPoint.y - currentCenter.y;
     const distanceToTarget = Math.sqrt(dx * dx + dy * dy);
     
-    // Si on est arrivé au point cible, passer au suivant
+    // si on est arrivé au point cible, passer au suivant/au précédent
     if (distanceToTarget < CONFIG.constantSpeed) {
-      state.currentTargetIndex++;
-      
-      // Boucler quand on arrive à la fin
-      if (state.currentTargetIndex >= state.recordedTrail.length) {
-        state.currentTargetIndex = 0;
-        state.currentStrokeColor = getRandomPaleColor();
+      if (state.movingForward) {
+        // avance dans le tracé
+        state.currentTargetIndex++;
+        
+        // si on arrive à la fin, on change de direction
+        if (state.currentTargetIndex >= state.recordedTrail.length) {
+          state.movingForward = false;
+          state.currentTargetIndex = state.recordedTrail.length - 2; // reculer d'un point
+          if (state.currentTargetIndex < 0) state.currentTargetIndex = 0;
+          
+          // changer de couleur quand on fait demi-tour
+          state.currentStrokeColor = getRandomPaleColor();
+        }
+      } else {
+        // recule dans le tracé
+        state.currentTargetIndex--;
+        
+        // si on arrive au début, change de direction
+        if (state.currentTargetIndex < 0) {
+          state.movingForward = true;
+          state.currentTargetIndex = 1; // avancer d'un point
+          if (state.currentTargetIndex >= state.recordedTrail.length) {
+            state.currentTargetIndex = state.recordedTrail.length - 1;
+          }
+          
+          // changer de couleur quand on fait demi-tour
+          state.currentStrokeColor = getRandomPaleColor();
+        }
       }
       
-      targetPoint = state.recordedTrail[state.currentTargetIndex];
+      // maj le point cible
+      if (state.currentTargetIndex >= 0 && state.currentTargetIndex < state.recordedTrail.length) {
+        targetPoint = state.recordedTrail[state.currentTargetIndex];
+      }
     }
     
-    // Calculer la direction vers le point cible
+    // calculer la direction vers le point cible
     const newDx = targetPoint.x - currentCenter.x;
     const newDy = targetPoint.y - currentCenter.y;
     const distance = Math.sqrt(newDx * newDx + newDy * newDy);
     
-    // Se déplacer à vitesse constante vers le point cible
+    // vitesse constante
     if (distance > 0) {
       const moveX = (newDx / distance) * CONFIG.constantSpeed;
       const moveY = (newDy / distance) * CONFIG.constantSpeed;
@@ -236,16 +256,16 @@
       state.y += moveY;
     }
     
-    // Utiliser la couleur du point si disponible
+    // utiliser la couleur du point si disponible
     if (targetPoint.color) {
       state.currentStrokeColor = targetPoint.color;
     }
     
-    // Appliquer la position
+    // go position
     state.block.style.left = state.x + 'px';
     state.block.style.top = state.y + 'px';
     
-    // Ajouter au tracé visuel
+    // ajouter au tracé visuel
     const newCenterX = state.x + state.width / 2;
     const newCenterY = state.y + state.height / 2;
     
@@ -255,7 +275,7 @@
       color: state.currentStrokeColor 
     });
     
-    // Limiter la longueur du tracé en pixels (pas en nombre de points)
+    // limiter la longueur du tracé en pixels (pas en nombre de points)
     while (getTotalLength(state.trailPoints) > CONFIG.trailMaxLength) {
       state.trailPoints.shift();
     }
@@ -292,7 +312,7 @@
       color: state.currentStrokeColor 
     });
 
-    // Limiter la longueur du tracé en pixels
+    // limiter la longueur du tracé en pixels
     while (getTotalLength(state.trailPoints) > CONFIG.trailMaxLength) {
       state.trailPoints.shift();
     }
@@ -310,7 +330,7 @@
     state.y = Math.min(state.y, maxY);
   }
 
-  // ===== DÉMARRAGE =====
+  // start
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
