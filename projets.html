@@ -200,135 +200,215 @@ Ce projet vise à ouvir de nouveaux regards, faisant le lien entre l'histoire et
 
 
 
-
 <script>
-const hoverImage = document.getElementById("hover-image-index");
-let intervalId = null;
+// Fonction de préchargement des images
+// Variables globales pour la position de la souris
+let currentMouseX = 0;
+let currentMouseY = 0;
 
-// détection mobile
-const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+// Capturer la position de la souris dès le chargement
+const isMobileDevice = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+if (!isMobileDevice) {
+  document.addEventListener("mousemove", (e) => {
+    currentMouseX = e.clientX;
+    currentMouseY = e.clientY;
+  });
+}
 
-document.querySelectorAll(".project-row").forEach(row => {
-  const images = row.dataset.images?.split(",").map(img => img.trim()) || [];
-  let currentIndex = 0;
+// Fonction de préchargement des images
+function preloadImages() {
+  return new Promise((resolve) => {
+    const allImages = [];
+    
+    // Collecte toutes les images des projets
+    document.querySelectorAll(".project-row").forEach(row => {
+      const images = row.dataset.images?.split(",").map(img => img.trim()) || [];
+      allImages.push(...images.filter(img => img !== ""));
+    });
 
-  function showImage(index) {
-    hoverImage.src = images[index];
-    hoverImage.style.opacity = 1;
-  }
-
-  function startImageLoop() {
-    if (intervalId) clearInterval(intervalId);
-    intervalId = setInterval(() => {
-      currentIndex = (currentIndex + 1) % images.length;
-      showImage(currentIndex);
-    }, 3000); // change l'image toutes les 3 secondes
-  }
-
-  function moveImageWithCursor(e) {
-    const margin = 20;
-    const imageWidth = hoverImage.offsetWidth || 1000;
-    const imageHeight = hoverImage.offsetHeight || 1000;
-    const cursorX = e.clientX;
-    const cursorY = e.clientY;
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-
-    // horizontal
-    let left = cursorX + margin;
-    if (left + imageWidth > screenWidth) {
-      left = cursorX - imageWidth - margin;
+    // Si pas d'images, résoudre immédiatement
+    if (allImages.length === 0) {
+      resolve();
+      return;
     }
 
-    // vertical adaptif
-    const ratio = cursorY / screenHeight; 
-    let top = cursorY - imageHeight * ratio;
-    top = Math.max(margin, Math.min(top, screenHeight - imageHeight - margin));
+    let loadedCount = 0;
+    const totalImages = allImages.length;
 
-    hoverImage.style.left = `${left}px`;
-    hoverImage.style.top = `${top}px`;
-  }
-
-  if (!isMobile) {
-    // si desktop
-    row.addEventListener("mouseenter", e => {
-      if (images.length === 0) return;
-      currentIndex = 0;
-      showImage(currentIndex);
-      startImageLoop();
-      hoverImage.style.opacity = 1;
+    allImages.forEach(src => {
+      const img = new Image();
+      
+      img.onload = img.onerror = () => {
+        loadedCount++;
+        if (loadedCount === totalImages) {
+          resolve();
+        }
+      };
+      
+      img.src = src;
     });
+  });
+}
 
-    row.addEventListener("mousemove", e => {
-      if (images.length > 0) {
-        moveImageWithCursor(e);
+// Initialisation
+async function init() {
+  const hoverImage = document.getElementById("hover-image-index");
+  
+  // S'assurer que l'image est invisible et positionnée hors écran au départ
+  hoverImage.style.opacity = 0;
+  // Précharger toutes les images en arrière-plan (sans bloquer l'affichage)
+  preloadImages();
+  
+  // Initialiser la logique d'affichage immédiatement
+  setupImageDisplay();
+}
+
+function setupImageDisplay() {
+  const hoverImage = document.getElementById("hover-image-index");
+  
+  let intervalId = null;
+
+  // Détection mobile
+  const isMobile = isMobileDevice;
+
+  document.querySelectorAll(".project-row").forEach(row => {
+    const images = row.dataset.images?.split(",").map(img => img.trim()) || [];
+    let currentIndex = 0;
+
+    function showImage(index, x, y) {
+      // Ne charger l'image que si on a une position valide
+      if (x !== undefined && y !== undefined) {
+        const imgSrc = images[index];
+        hoverImage.src = imgSrc;
+        
+        
+        // Attendre que l'image soit chargée pour obtenir ses vraies dimensions
+        hoverImage.onload = () => {
+          // Positionner avec les vraies dimensions de l'image
+          if (!isMobile) {
+            moveImageWithCursor({ clientX: x, clientY: y });
+          }
+          
+          // Rendre visible une fois positionnée
+                hoverImage.style.opacity = 1;
+        };
       }
-    });
+    }
 
-    row.addEventListener("mouseleave", () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-        intervalId = null;
-      }
-      hoverImage.style.opacity = 0;
-      hoverImage.src = "";
-    });
-
-    row.addEventListener("click", () => {
+    function startImageLoop() {
+      if (intervalId) clearInterval(intervalId);
       if (images.length <= 1) return;
-      currentIndex = (currentIndex + 1) % images.length;
-      showImage(currentIndex);
-      startImageLoop(); // redémarre le timer
-    });
+      intervalId = setInterval(() => {
+        currentIndex = (currentIndex + 1) % images.length;
+        hoverImage.src = images[currentIndex];
+      }, 3000);
+    }
 
-  } else {
-    // si mobile
-    row.addEventListener("click", () => {
-      if (images.length === 0) return;
-      currentIndex = (currentIndex + 1) % images.length;
-      showImage(currentIndex);
+    function moveImageWithCursor(e) {
+      const margin = 20;
+      const imageWidth = hoverImage.offsetWidth || 1000;
+      const imageHeight = hoverImage.offsetHeight || 1000;
+      const cursorX = e.clientX;
+      const cursorY = e.clientY;
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
 
-      hoverImage.style.position = "fixed";
-      hoverImage.style.left = "50%";
-      hoverImage.style.top = "50%";
-      hoverImage.style.transform = "translate(-50%, -50%)";
-      hoverImage.style.maxWidth = "70%";
-      hoverImage.style.maxHeight = "70%";
-      hoverImage.style.zIndex = "100";
+      // Horizontal
+      let left = cursorX + margin;
+      if (left + imageWidth > screenWidth) {
+        left = cursorX - imageWidth - margin;
+      }
 
-      startImageLoop(); // démarre/redémarre le timer
-    });
-  }
-});
+      // Vertical adaptif
+      const ratio = cursorY / screenHeight; 
+      let top = cursorY - imageHeight * ratio;
+      top = Math.max(margin, Math.min(top, screenHeight - imageHeight - margin));
 
+      hoverImage.style.left = `${left}px`;
+      hoverImage.style.top = `${top}px`;
+    }
+
+    if (!isMobile) {
+      // Desktop
+      row.addEventListener("mouseenter", e => {
+        if (images.length === 0) return;
+        currentIndex = 0;
+        
+        // Utiliser la position actuelle de la souris (capturée globalement)
+        showImage(currentIndex, currentMouseX, currentMouseY);
+        startImageLoop();
+      });
+
+      row.addEventListener("mousemove", e => {
+        if (images.length > 0) {
+          moveImageWithCursor(e);
+        }
+      });
+
+      row.addEventListener("mouseleave", () => {
+        if (intervalId) {
+          clearInterval(intervalId);
+          intervalId = null;
+        }
+        hoverImage.style.opacity = 0;
+      });
+
+      row.addEventListener("click", () => {
+        if (images.length <= 1) return;
+        currentIndex = (currentIndex + 1) % images.length;
+        hoverImage.src = images[currentIndex];
+        startImageLoop();
+      });
+
+    } else {
+      // Mobile
+      row.addEventListener("click", () => {
+        if (images.length === 0) return;
+        currentIndex = (currentIndex + 1) % images.length;
+        
+        hoverImage.src = images[currentIndex];
+        hoverImage.style.position = "fixed";
+        hoverImage.style.left = "50%";
+        hoverImage.style.top = "50%";
+        hoverImage.style.transform = "translate(-50%, -50%)";
+        hoverImage.style.maxWidth = "70%";
+        hoverImage.style.maxHeight = "70%";
+        hoverImage.style.zIndex = "100";
+        hoverImage.style.opacity = 1;
+
+        startImageLoop();
+      });
+    }
+  });
 
   function getRandomPastelColor() {
     const hue = Math.floor(Math.random() * 360);
     return `hsl(${hue}, 100%, 90%)`;
   }
 
+  // Couleur pastel pour ligne de projet
+  if (!isMobile) {
+    document.querySelectorAll(".project-row").forEach(row => {
+      row.addEventListener("mouseenter", () => {
+        row.dataset.originalBg = row.style.backgroundColor || "";
+        row.style.backgroundColor = getRandomPastelColor();
+      });
 
-// couleur pastel pour ligne de projet sur desktop
-if (!isMobile) {
-  document.querySelectorAll(".project-row").forEach(row => {
-    row.addEventListener("mouseenter", () => {
-      row.dataset.originalBg = row.style.backgroundColor || "";
-      row.style.backgroundColor = getRandomPastelColor();
+      row.addEventListener("mouseleave", () => {
+        row.style.backgroundColor = row.dataset.originalBg;
+      });
     });
-
-    row.addEventListener("mouseleave", () => {
-      row.style.backgroundColor = row.dataset.originalBg;
+  } else {
+    document.querySelectorAll(".project-row").forEach(row => {
+      row.addEventListener("click", () => {
+        row.dataset.originalBg = row.style.backgroundColor || "";
+        row.style.backgroundColor = getRandomPastelColor();
+      });
     });
-  });
+  }
 }
-else {
-  document.querySelectorAll(".project-row").forEach(row => {
-    row.addEventListener("click", () => {
-      row.dataset.originalBg = row.style.backgroundColor || "";
-      row.style.backgroundColor = getRandomPastelColor();
-    });
-  });
-}
 
+// Lancer l'initialisation
+init();
 </script>
 </html>

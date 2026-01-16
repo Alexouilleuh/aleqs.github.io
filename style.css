@@ -116,6 +116,10 @@ a:hover {
   content: none !important;
 }
 
+.preload-image {
+display: none;
+}
+
 .navbar {
   position: fixed;
   bottom: 0;
@@ -125,12 +129,6 @@ a:hover {
   font-size: 1.25em;
   z-index: 1000;
   pointer-events: none;
-}
-
-.navbar a {
-  display: flex;
-  align-items: center;
-  height: 100%;
 }
 
 .navbar-grid {
