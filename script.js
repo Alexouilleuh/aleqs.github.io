@@ -246,7 +246,7 @@ function stopRecording() {
   if (isRecording && recordedTrail.length > 0) {
     isRecording = false;
     
-    // Simplifier le tracé (garder  point sur 3 pour réduire la taille)
+    // simplifier le tracé (garder 1 point sur 3 pour réduire la taille)
     const simplifiedTrail = recordedTrail.filter((_, index) => index % 3 === 0);
     
     // sauvegarder dans localStorage
@@ -264,7 +264,7 @@ document.addEventListener("mousemove", (e) => {
   
   points.push({ x: e.clientX, y: e.clientY, color: currentStrokeColor });
   
-  // enregistrer pour le replay
+  // enregistrer pour le replay ensuite
   if (isRecording && recordedTrail.length < MAX_TRAIL_POINTS) {
     recordedTrail.push({ 
       x: e.clientX, 
@@ -376,7 +376,7 @@ document.querySelectorAll('a[href="alexis.html"]').forEach(link => {
 
 
 
-//  ??
+// typo fine pour les drapeaux mais à voir ensuite
 document.querySelectorAll('p').forEach(p => {
   p.innerHTML = p.innerHTML.replace(/ (\S+)$/, '&nbsp;$1');
 });
