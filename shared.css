@@ -1,0 +1,1082 @@
+/* ======================================================================= */
+/* =========================    GÉNÉRALES    ============================ */
+/* ======================================================================= */
+
+@font-face {
+  font-family: "Neue Haas Grotesk Display";
+  src: url("./fonts/neue-haas-grotesk-display/NeueHaasDisplayRoman.ttf")
+    format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+*, *::before, *::after {
+  font-weight: 400 !important;
+  font-family: Neue Haas Grotesk Display;
+  line-height: 1.075;
+  /* letter-spacing: -0.015em; */
+    cursor: crosshair;
+
+}
+
+body,head {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+  height: 100vh;
+  font-weight: 400;
+  font-family: sans-serif;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  background: #000000;
+  color: #ffffff;
+  /* taille fluide : passe progressivement de 0.85rem (mobile) à 1rem
+     (desktop) entre 320px et 1024px de large, au lieu d'un palier net
+     à 768px. Comme presque tout le site est en em, cette base fluide
+     fait déjà transitionner en douceur la majorité des textes. */
+  font-size: clamp(0.85rem, calc(0.78rem + 0.34vw), 1rem);
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+main {
+  box-sizing: border-box;
+  margin: 1em;
+}
+
+::selection {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+a {
+  text-decoration: underline;
+  color: inherit;
+  cursor: zoom-in !important;
+}
+
+a:visited {
+  color: inherit;
+}
+
+
+
+a[href]:not(#navbar a):not(#navbar-left):not(#navbar-right .nav-link) {
+  cursor: zoom-in !important;
+}
+
+
+/* Liens de navigation : retour au crosshair */
+#navbar a,
+#navbar .nav-link,
+#navbar-left {
+  cursor: crosshair !important;
+}
+
+.no-image,
+.no-image * {
+  cursor: not-allowed !important;
+}
+
+
+/* ======================================================================= */
+/* ==========================    DESKTOP    ============================= */
+/* ======================================================================= */
+
+/* ----------------------------------------------------------------------- */
+/* ---------------------  Classes communes (toutes pages)  --------------- */
+/* ----------------------------------------------------------------------- */
+
+/* -- navbar -- */
+
+#navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2vh;
+  box-sizing: border-box;
+  z-index: 1000000 !important;
+  cursor: crosshair !important;
+}
+
+#navbar-left {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 1.5em;
+  text-decoration: none;
+  mix-blend-mode: difference !important;
+}
+
+#navbar-right {
+  font-size: 16px;
+  font-size: 1.5em;
+  white-space: nowrap;
+  pointer-events: auto;
+}
+
+#navbar-right .nav-link {
+  text-decoration: none;
+}
+
+/* the page you're currently on turns gray and isn't a live link */
+#navbar-right .nav-link.active {
+  color: rgb(70, 70, 70);
+}
+
+/* -- carte de visite -- */
+/* s'affiche sous "Alexis Brémond" au survol du titre (desktop uniquement :
+   la classe .only-desktop la masque sur mobile). Le markup est dans la
+   navbar de chaque page : <div class="business-card only-desktop">…</div> */
+.business-card {
+  position: absolute;
+  z-index: 0 !important;
+  top: 0em;                 /* juste sous la navbar */
+  left: 0;                 /* alignée sur le titre (= padding de la navbar) */
+  width: 450px;
+  aspect-ratio: 8.5 / 5.5;   /* format carte de visite : 500 × ≈ 323 px */
+  box-sizing: border-box;
+  padding: 0.7em;
+  display: grid;
+  grid-template-columns: 1fr 0.9fr;
+  grid-template-rows: auto 1fr;
+  background: #00ff80;
+  color: #000000;
+  font-size: 1em;          /* même taille de texte que la navbar */
+  user-select: none;
+  /* cachée tant qu'on ne survole pas le titre */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.business-card .card-name {          /* coin haut gauche */
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.business-card .card-role {          /* coin bas gauche */
+  grid-column: 1;
+  grid-row: 2;
+  align-self: end;
+  /* background-color: blue; */
+}
+
+/* coin haut droit : les deux lignes sont alignées à gauche dans leur bloc,
+   donc le "@" tombe sous le "h" de "hello". Coin bas droit : vide. */
+.business-card .card-contact {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: left;
+}
+
+.business-card .card-skills {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: end;
+  text-align: left;
+  /* background-color: red; */
+}
+
+/* survol (ou focus clavier) du titre : on affiche la carte, et la navbar passe
+   au-dessus du reste (textes de l'atlas, images) le temps du survol */
+/* <br class="only-mobile"> : saut de ligne réservé à la version mobile
+   (masqué ici, réactivé dans le bloc mobile ci-dessous) */
+br.only-mobile {
+  display: none;
+}
+
+@media (any-hover: hover) {
+  #navbar:has(#navbar-left a:is(:hover, :focus-visible)) {
+    z-index: 1;
+  }
+
+  #navbar:has(#navbar-left a:is(:hover, :focus-visible)) .business-card {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  #navbar-left a:is(:hover, :focus-visible) {
+    position: relative;
+    z-index: 1;
+    color: #000000;
+    text-decoration: none;
+  }
+}
+
+/* -- utilitaires partagés -- */
+
+/* projets sans image : .text-item sur index.html, .project-row sur projets.html */
+.no-image {
+  color: rgb(70, 70, 70) !important;
+  cursor: not-allowed !important;
+}
+
+/* image agrandie au survol/clic : hover-image-homepage-a/b sur index.html,
+   hover-image-index sur projets.html */
+.hover-image {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+
+/* ----------------------------------------------------------------------- */
+/* -------------------------  index.html (Atlas)  ------------------------- */
+/* ----------------------------------------------------------------------- */
+
+/* -- navbar -- */
+/* rien de spécifique : voir la navbar commune ci-dessus */
+
+/* -- contenu -- */
+
+/* tracé souris */
+#mouse-trail-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* liste empilée titre/type + carrousel, affichée uniquement en mobile */
+#container-mobile {
+  display: none;
+}
+
+/* zone de distribution random des projets */
+#container {
+  visibility: hidden;  
+  overflow: hidden !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  
+}
+
+/* nom des projets */
+.text-item {
+  position: absolute;
+  font-size: 0.85em;
+  padding: 0.75em;
+  box-sizing: border-box;
+  pointer-events: auto;
+  white-space: nowrap;
+  user-select: none;
+  mix-blend-mode: difference;
+  z-index: 1;
+}
+
+/* pas de scroll sur la home */
+.no-scroll {
+  overflow: hidden !important;
+}
+
+/* image au hover — id hérité d'une version antérieure du markup,
+   non référencé par le HTML actuel (les images utilisées sont
+   #hover-image-homepage-a / -b, stylées via .hover-image ci-dessus) */
+#hover-image-homepage {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 500px;
+  object-fit: contain;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+#hover-image-homepage::before {
+  content: none !important;
+}
+
+/* idem : classe non référencée dans le HTML actuel, laissée au cas où */
+.preload-image {
+display: none;
+}
+
+/* #hover-image-homepage-a,
+#hover-image-homepage-b {
+  outline: 1px solid #ffffff;
+} */
+
+/* ----------------------------------------------------------------------- */
+/* ------------------------  projets.html (Index)  ------------------------ */
+/* ----------------------------------------------------------------------- */
+
+/* -- navbar -- */
+/* rien de spécifique : voir la navbar commune ci-dessus */
+
+/* -- contenu -- */
+
+#hover-image-index,
+#hover-video-index {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  transform: translate(0, 0);
+  opacity: 0;
+  max-width: 400px;
+  max-height: 400px;
+  z-index: 1000;
+  background-color: white;
+}
+
+/* container du tableau de projets */
+#container-index {
+  visibility: visible;
+  position: relative;
+  width: 98%;
+  margin: 0 auto;
+}
+
+.last-col-group {
+  grid-column: 4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.project-row {
+  font-size: 0.80em;
+  padding: 0.75em 0em;
+  border-bottom: 1px solid rgb(255, 255, 255);
+    line-height: 2 !important;
+  /* transition: background-color 0s ease-in-out; */
+}
+
+.project-row .col {
+  word-break: break-word;
+    /* mix-blend-mode: difference; */
+}
+.project-row:hover:not(.no-image) {
+  color:#000000;
+  border-bottom-color: #000000;
+}
+
+.project-row:has(+ .project-row:hover:not(.no-image)),
+.year-spacing:has(+ .project-row:hover:not(.no-image)) {
+  border-bottom-color: #000000;
+}
+
+/* écrans tactiles (pas de souris) : toucher une ligne ne doit rien changer.
+   Sans ça, le :hover "collant" du navigateur après un toucher met le texte en noir
+   sur le fond noir (ce style suppose que le JS colore le fond, ce qu'il ne fait que
+   sur desktop). */
+@media (hover: none) {
+  .project-row:hover:not(.no-image) {
+    color: inherit;
+    border-bottom-color: #ffffff;
+  }
+
+  .project-row:has(+ .project-row:hover:not(.no-image)),
+  .year-spacing:has(+ .project-row:hover:not(.no-image)) {
+    border-bottom-color: #ffffff;
+  }
+
+  .project-row {
+    -webkit-tap-highlight-color: transparent; /* pas de flash du navigateur au toucher */
+  }
+}
+
+.project-row::selection {
+  /* mix-blend-mode: difference; */
+  background-color: #000000 !important;
+}
+
+
+.project-row:last-child {
+  margin: 3em;
+  border-bottom: none;
+  visibility: hidden;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: 0.64fr 2.35fr 0.4fr 0.75fr;
+  gap: 2.5rem;
+}
+
+.project-titles {
+  font-size: 0.8em;
+  color: rgb(70, 70, 70);
+  padding-bottom: 0.70em;
+  margin-top: 8em;
+  border-bottom: 1px solid #ffffff;
+}
+
+.year-spacing {
+  padding: 4em 0.75em 0.75em 0em;
+  display: grid;
+  border-bottom: 1px solid #ffffff;
+}
+
+.project-row.no-image {
+  color: rgb(70, 70, 70);
+  background-color: rgb(0, 0, 0) ! important;
+}
+
+
+/* ----------------------------------------------------------------------- */
+/* -------------------------  infos.html (Infos)  ------------------------- */
+/* ----------------------------------------------------------------------- */
+
+/* -- navbar -- */
+/* rien de spécifique : voir la navbar commune ci-dessus */
+
+/* -- contenu -- */
+
+/* Grand titre (formations, expériences...) */
+.section-title {
+  /* fluide : 1.91rem (mobile) → 4.5rem (desktop), entre 320px et
+     1024px de large, calculé à partir des anciennes valeurs figées
+     (4.5em desktop / 2.25em mobile) pour garder le même rendu aux
+     deux extrémités */
+  font-size: clamp(1.91rem, calc(0.74rem + 5.88vw), 4.5rem);
+  margin: 0;
+}
+
+/* Contenu texte */
+.section-body {
+  margin: 0;
+  margin-left: 1.65em;
+  /* fluide : 1.53rem (mobile) → 3rem (desktop), même logique */
+  font-size: clamp(1.53rem, calc(0.86rem + 3.34vw), 3rem);
+}
+
+/* Dates et durées */
+.section-body .label {
+  font-size: 0.5em;
+  margin-right: 0;
+  color: rgb(70, 70, 70);
+}
+
+/* Moi */
+#alexis {
+  margin-top: 11em !important;
+  margin-bottom: 8em !important;
+  max-width: 85ch;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  justify-content: center;
+  text-align: center;
+  /* équilibre la longueur des lignes plutôt que de les laisser en
+     drapeau irrégulier — pas de support JS nécessaire, dégrade
+     proprement (ragged normal) sur les navigateurs qui l'ignorent */
+  text-wrap: balance;
+  /* fluide : 0.64rem (mobile) → 1rem (desktop) */
+  font-size: clamp(0.64rem, calc(0.47rem + 0.82vw), 1rem) !important;
+  color: rgb(70, 70, 70) !important;
+}
+
+#bottom {
+  margin-top: 8em !important;
+  padding-bottom: 8em !important;
+  justify-content: center;
+  text-align: center;
+  text-wrap: balance;
+  /* fluide : 0.64rem (mobile) → 1rem (desktop) */
+  font-size: clamp(0.64rem, calc(0.47rem + 0.82vw), 1rem) !important;
+  color: rgb(70, 70, 70) !important;
+}
+
+#formation {
+  margin-top: 4em !important;
+}
+
+/* espace sous hello@... en bas de page */
+#contact .section-body {
+  margin-bottom: 4em !important;
+}
+
+h2 {
+  text-wrap: balance;
+}
+
+/* h2 {
+  font-size: 10em;
+  font-family: sans-serif;
+  font-weight: 400;
+  color: rgb(183, 128, 128);
+  text-align: center;
+  top: 50%;
+} */
+
+/* Expériences — mots colorés liés aux entreprises/studios (voir
+   infos.js). Couleur assignée en JS ; l'image au survol suit le
+   curseur, exactement comme #hover-image-index sur projets.html */
+.info-link {
+  /* cursor: pointer; */
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.1em;
+}
+
+#hover-image-infos {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  transform: translate(0, 0);
+  opacity: 0;
+  max-width: 400px;
+  max-height: 400px;
+  z-index: 1000;
+  background-color: white;
+}
+
+
+/* ----------------------------------------------------------------------- */
+/* -------------------------  photos.html (Photos)  ------------------------ */
+/* ----------------------------------------------------------------------- */
+
+/* -- navbar -- */
+/* rien de spécifique : voir la navbar commune ci-dessus */
+
+/* -- contenu -- */
+
+#tvx {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 400px;
+  width: auto;
+  height: auto;
+}
+
+/* pas de scroll sur la page photos (desktop ET mobile).
+   Classe distincte de .no-scroll : celle-ci est réactivée en scroll sur mobile. */
+html:has(body.page-photos),
+body.page-photos {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+
+/* ----------------------------------------------------------------------- */
+/* --------------------------  Tablette (769–1024px)  --------------------- */
+/* ----------------------------------------------------------------------- */
+/* regroupées par breakpoint plutôt que par page, pour rester lisibles
+   d'un seul bloc — concerne surtout projets.html, un peu index.html */
+
+/* fenêtres d'ordinateur moyennes uniquement : les tablettes tactiles passent par le bloc MOBILE */
+@media (min-width: 769px) and (max-width: 1024px) and (not ((hover: none) and (pointer: coarse))) {
+
+
+  .project-grid {
+    grid-template-columns: 0.55fr 1.75fr  0.4fr 0.6fr;
+    gap: 1.7rem;
+  }
+
+  .alexis-grid {
+    grid-template-columns: 0.55fr 1.75fr  0.4fr 0.6fr;
+    gap: 1.7rem;
+  }
+
+  #hover-image-index,
+  #hover-video-index {
+    max-width: 350px;
+    max-height: 350px;
+  }
+
+  #hover-image-infos {
+    max-width: 350px;
+    max-height: 350px;
+  }
+
+
+  .text-item {
+    font-size: 0.82em;
+  }
+
+  .project-titles,
+  .alexis-titles {
+    margin-top: 2em;
+  }
+
+  .project-row:last-child {
+    margin: 2.5em;
+  }
+
+}
+
+
+/* ======================================================================= */
+/* ===========================    MOBILE    ============================== */
+/* ======================================================================= */
+
+/* mobile = fenêtre étroite (<= 768px) OU appareil tactile jusqu'à 1400px
+   (tablettes, iPad Pro 13" compris). À garder identique à MOBILE_LAYOUT_QUERY (color.js). */
+@media (max-width: 768px), (hover: none) and (pointer: coarse) and (max-width: 1400px) {
+
+  /* --------------------------------------------------------------------- */
+  /* -------------------  Classes communes (toutes pages)  ---------------- */
+  /* --------------------------------------------------------------------- */
+
+  /* body.font-size est maintenant fluide (voir la règle générale
+     ci-dessus, clamp()) : plus besoin de palier ici */
+
+  body.no-scroll {
+    overflow: auto !important;
+  }
+
+  /* .only-desktop : liens "Atlas," / "Index," masqués sur mobile
+     .no-image (utilitaire commun) : masqué, remplacé par le badge type */
+  .only-desktop, .no-image {
+    display: none;
+  }
+
+  /* <br class="only-mobile"> : saut de ligne visible uniquement sur mobile */
+  br.only-mobile {
+    display: inline;
+  }
+
+  /* carte de visite : sur mobile elle reste dans le DOM (grâce à cette règle,
+     plus spécifique que .only-desktop) mais cachée ; elle apparaît quand
+     index.html ajoute .card-open à #navbar (clic sur "Alexis Brémond") */
+  /* --card-h : hauteur de la carte, posée par index.html (script en bas de page) :
+     = position du titre du 1er projet - 1em. Elle dépend de la hauteur de
+     l'écran et du nombre de lignes du titre, donc elle ne peut pas être fixe. */
+  body {
+    /* marge unique autour des images : côtés, bas (ancres) et flèche de retour
+       en haut. Les trois la lisent -> elles ne peuvent plus diverger. */
+    --media-margin: 1.25em;
+    --card-fs: 1; /* taille du texte de la carte, relative à la navbar (1 = même taille que "Alexis Brémond") */
+  }
+
+  /* carte de visite, tous écrans "mobile" : elle reste dans le DOM mais cachée
+     (.only-desktop la masquerait), et s'affiche quand index.html ajoute .card-open */
+  .business-card.only-desktop {
+    display: grid;
+  }
+
+  #navbar.card-open .business-card {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  #navbar.card-open #navbar-left a {
+    position: relative;
+    z-index: 1;
+    color: #000000;
+  }
+
+  /* > 480px (grands smartphones, tablettes) : la carte garde son format de carte
+     de visite (450px, ratio 8.5:5.5, voir .business-card plus haut). Seuls
+     Smartphones <= 480px : carte pleine largeur, jusqu'au 1er projet. */
+  @media (max-width: 480px) {
+    .business-card.only-desktop {
+      width: 100%;                 /* toute la largeur de l'écran */
+      aspect-ratio: auto;
+      /* #navbar-left fait 1.5em du body : on divise par 1.5 × --card-fs pour
+         exprimer les tailles ci-dessous en em du body */
+      font-size: calc(var(--card-fs) * 1em);
+      height: var(--card-h, 50vh); /* border-box : padding inclus */
+      padding: calc(1.25em / (1.5 * var(--card-fs))); /* = padding de la navbar */
+    }
+
+    #navbar.card-open .business-card {
+      /* texte plus grand : on donne plus de place à la colonne de droite (e-mail) */
+      grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+      overflow-wrap: anywhere; /* garde-fou : l'e-mail ne déborde jamais de l'écran */
+    }
+
+    /* carte ouverte : "Index, Infos, Photos" passent sous la carte.
+       - #navbar-left perd son mix-blend-mode (sinon la carte se mélange avec le
+         texte de droite au lieu de le recouvrir) ;
+       - les liens cachés ne sont plus cliquables à travers la carte. */
+    #navbar.card-open #navbar-left {
+      mix-blend-mode: normal !important; /* !important : la règle de base en a un */
+    }
+
+    #navbar.card-open #navbar-right {
+      pointer-events: none;
+    }
+
+    /* les 3 <br> en tête de .card-contact servent à descendre le bloc sur desktop ;
+       sur smartphone ils font déborder la carte, on les masque */
+    .business-card .card-contact > br:nth-of-type(-n+3) {
+      display: none;
+    }
+
+    /* le bloc contact démarre sous le titre "Alexis Brémond" (qui reste affiché
+       en haut à gauche de la navbar, par-dessus la carte) */
+    .business-card .card-contact {
+      margin-top: 1.4em;
+    }
+  }
+
+  /* -- navbar -- */
+
+  #navbar-right {
+    font-size: 1.5em;
+  }
+
+
+  /* --------------------------------------------------------------------- */
+  /* ---------------------------  index.html (Atlas)  ---------------------- */
+  /* --------------------------------------------------------------------- */
+
+  /* -- navbar -- */
+  /* rien de spécifique */
+  #navbar {
+    height: 4em;
+    padding: 1.25em;
+    z-index: 10000;
+    mix-blend-mode: difference;
+  }
+
+  /* -- contenu -- */
+
+  /* la home garde son layout aléatoire uniquement au delà de 768px.
+     .hover-image est ici masquée pour l'atlas ; sur projets.html elle
+     reste utilisée (voir le réglage de taille dans la section
+     projets.html ci-dessous). */
+  #container,
+  #mouse-trail-canvas,
+  .hover-image {
+    display: none !important;
+  }
+
+  #container-mobile {
+    display: block;
+    visibility: hidden;
+    position: relative;
+    z-index: 1;
+    padding-top: 0; /* le 1er projet se cale lui-même en bas du 1er écran (voir :first-child) */
+  }
+
+  .mobile-project {
+    padding: 3em 0;
+    margin: 0 var(--media-margin);
+  }
+
+  /* 1er projet : il occupe tout le 1er écran et se cale EN BAS (flex-end), avec
+     le même retrait que l'ancre des autres projets (1.25em sous le carrousel).
+     À scrollY = 0, le bas de son carrousel est donc pile à 1.25em du bas de
+     l'écran, quel que soit le nombre de lignes du titre ou la hauteur de l'écran
+     - exactement la position que prend l'ancre quand on y revient en remontant.
+     Les autres projets gardent leur espacement (3em), sans influence sur les ancres. */
+  .mobile-project:first-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-sizing: border-box; /* sinon le padding s'ajoute aux 100vh */
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 1em 0 var(--media-margin); /* bas = marge de l'ancre (voir .mobile-carousel) */
+  }
+
+  .mobile-project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1em;
+    font-size: 1em;
+  }
+
+  .mobile-project-title {
+    flex: 1;
+    font-size: 1.5em;
+  }
+
+  .mobile-project-year {
+    color: rgb(70,70,70);
+    font-size: 1em;
+    margin-left: 0.25em;
+  } 
+
+
+  .mobile-project.no-image .mobile-project-title {
+    color: rgb(70, 70, 70);
+  }
+
+  .mobile-carousel {
+    margin-top: 1em;
+  }
+
+  /* -- ancres de scroll (index.html, mobile uniquement) -------------------- */
+  /* un swipe amène au projet suivant et s'y bloque (au lieu d'un scroll libre).
+     L'ancre est le BAS du carrousel de chaque projet, qui se cale 1.25em au-dessus
+     du bas de l'écran : même marge qu'à gauche et à droite (.mobile-project).
+
+     POURQUOI <body> ET NON LA PAGE ELLE-MÊME :
+     quand c'est la page (viewport) qui défile, les navigateurs mobiles masquent
+     leurs barres (url, onglets) en scrollant : la hauteur visible change, mais
+     pas celle sur laquelle les ancres sont calculées -> les projets se
+     décalent. Ici c'est <body> qui défile, à la hauteur de l'écran visible
+     (100dvh) : les barres ne bougent plus, l'écran garde une taille stable, et
+     le bas de l'image reste à 1.25em du bas, sur Chrome, Safari et Firefox.
+     - page-atlas : classe du <body> de index.html (no-scroll est retirée par
+       script.js sur mobile, donc on ne peut pas s'en servir)
+     - scroll-snap-stop: always : un swipe ne saute jamais plus d'un projet
+     Pour désactiver : supprimer ce bloc, ou passer mandatory en proximity. */
+  html:has(body.page-atlas) {
+    /* même unité que le body (100dvh) : avec 100%, certains navigateurs mobiles
+       donnent à <html> une hauteur différente et rognent le bas du body
+       (la marge du bas paraissait alors plus petite que celles des côtés) */
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  body.page-atlas {
+    height: 100vh;
+    height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto !important;
+    overscroll-behavior-y: none; /* pas de rebond / pull-to-refresh qui décalerait l'écran */
+    scroll-snap-type: y mandatory;
+  }
+
+  .mobile-carousel {
+    scroll-snap-align: end;
+    scroll-snap-stop: always;
+    scroll-margin-bottom: var(--media-margin);
+  }
+
+  /* -- flèche "retour en haut" (créée par script.js, à partir du 2e projet) -- */
+  /* alignée sur le coin bas droit des images : mêmes marges que les côtés / le bas.
+     Zone de toucher de 3em, mais la flèche est collée dans le coin (end / end). */
+  #scroll-top {
+    position: fixed;
+    right: var(--media-margin);
+    bottom: var(--media-margin);
+    z-index: 9000;                 /* au-dessus des images, sous la navbar */
+    box-sizing: border-box;
+    width: 4em;                    /* zone de toucher (la flèche est collée dans le coin) */
+    height: 4em;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #ffffff;
+    mix-blend-mode: difference;    /* lisible sur n'importe quelle image (comme la navbar) */
+    font-size: 1em;                /* un <button> n'hérite pas du font-size : on l'impose,
+                                      pour que 1.25em = la même marge que les images */
+    display: grid;
+    place-items: end end;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #scroll-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #scroll-top svg {
+    display: block;
+    height: 2.25em;                /* taille de la flèche (titres de projet = 1.5em) */
+    width: auto;                   /* largeur déduite du viewBox */
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+  }
+
+  /* images ET vidéos : même recadrage carré 1:1 (cover) */
+  .mobile-carousel img,
+  .mobile-carousel video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 2px;
+  }
+
+  /* carrousel tactile : pas de halo au toucher, pas de sélection ni de zoom au
+     double-tap quand on tape plusieurs fois de suite pour changer de média */
+  .mobile-carousel {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+
+  /* --------------------------------------------------------------------- */
+  /* -------------------------  projets.html (Index)  ----------------------- */
+  /* --------------------------------------------------------------------- */
+
+  /* -- navbar -- */
+  /* rien de spécifique */
+
+  /* -- contenu -- */
+
+
+  #container-index {
+    margin: 17em 1.1em 0em 1.1em;
+    width: auto;
+  }
+
+  .project-grid {
+    grid-template-columns: 1.1fr 0.2fr 1fr;
+    gap: 1.5em;
+  }
+
+  .project-titles {
+    margin-top: 1.5em;
+    grid-template-columns: 1.1fr 0.2fr 1fr;
+  }
+/* 
+  .project-titles > :nth-child(4) {
+    display: none;
+  } */
+
+  .year-spacing {
+    padding: 1em 0.75em 0.75em 0em;
+  }
+
+  #hover-image-index,
+  #hover-video-index {
+    max-width: 85vw;
+    max-height: 85vh;
+  }
+
+  /* s'applique en théorie aussi aux .hover-image des autres pages,
+     mais celles-ci sont déjà masquées par ailleurs sur mobile
+     (voir index.html > contenu ci-dessus) */
+  .hover-image {
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+
+
+  /* --------------------------------------------------------------------- */
+  /* --------------------------  infos.html (Infos)  ------------------------ */
+  /* --------------------------------------------------------------------- */
+
+  /* -- navbar -- */
+  /* rien de spécifique */
+
+  /* -- contenu -- */
+
+  #alexis {
+    /* margin-top: 12em !important;
+    margin-bottom: 8em !important; */
+    display: none !important;
+  }
+
+  main {
+    margin: 16em 1.25em 0em 1.25em;
+    width: auto;
+  }
+
+
+  /* .section-title.font-size est fluide (voir la règle générale),
+     seul le margin-left du contenu texte reste spécifique au mobile */
+  .section-body {
+    margin: 0;
+    margin-left: 1em;
+  }
+
+  /* Dates et durées */
+  .section-body .label {
+    font-size: 0.65em;
+    margin-right: 0;
+    color: rgb(70, 70, 70);
+  }
+
+  /* Moi — second réglage, redondant avec le bloc #alexis ci-dessus
+     (conservé tel quel, la spécificité/l'ordre des propriétés en
+     plus ne change rien au résultat) */
+  #alexis {
+    margin-top: 12em !important;
+    margin-bottom: 8em !important;
+    margin-left: 10% !important;
+    margin-right: 10% !important;
+    justify-content: center;
+    text-align: center;
+    color: rgb(70, 70, 70) !important;
+  }
+
+  #formation {
+    margin-top: 4em !important;
+  }
+
+  /* Expériences — .info-link n'a besoin d'aucun réglage spécifique ici :
+     la couleur et les liens restent actifs sur mobile, seule l'image au
+     survol est désactivée (voir setupInfoLinks() dans infos.js) */
+
+
+  /* --------------------------------------------------------------------- */
+  /* -------------------------  photos.html (Photos)  ------------------------ */
+  /* --------------------------------------------------------------------- */
+
+  /* rien de spécifique sur mobile pour le moment */
+  #tvx {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 30%;
+    width: auto;
+    height: auto;
+}
+
+}
+
+
+/* ======================================================================= */
+/* ==========================    AUTRES CLASSES    ======================= */
+/* ======================================================================= */
+
+/* accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+.hover-media {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.hover-media img,
+.hover-media video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* .flou {
+  filter:blur(4.5px)
+} */

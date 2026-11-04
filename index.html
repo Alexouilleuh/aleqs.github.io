@@ -1,89 +1,183 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>Alexis Brémond</title>
+    <meta
+      name="description"
+      content="Portfolio de Alexis Brémond, étudiant et designer graphique collaborant avec des particuliers et des entités culturelles. Projets d'éditions, d'identité visuelle, d'objets imprimé, de dessin de caractères. Expérimentations visuelles et développement d'outils."
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="shared.css" />
+    <script src="intro.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="icon" id="favicon" type="image/ico" href="icon-j.ico">
-  <title>Alexis Brémond</title>
-  <meta name="description" content="Portfolio de Alexis Brémond, étudiant et designer graphique collaborant avec des particuliers et des entités culturelles. Projets d'éditions, d'identité visuelle, d'objets imprimé, de dessin de caractères. Expérimentations visuelles et développement d'outils.">
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Alexis Brémond",
+        "url": "https://alexisbremond.fr",
+        "jobTitle": "Graphic designer",
+        "sameAs": [
+          "https://www.instagram.com/aleqsou",
+          "https://github.com/alexouilleuh"
+        ]
+      }
+    </script>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Alexis Brémond",
-  "url": "https://alexisbremond.fr",
-  "jobTitle": "Graphic designer",
-  "sameAs": [
-    "https://www.instagram.com/aleqsou",
-    "https://github.com/alexouilleuh",
-  ]
-}
-</script>
+  </head>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const path = window.location.pathname;
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  <body class="no-scroll page-atlas">
 
-  // si mobile → projets.html
-  if (isMobile && path !== "/projets.html") {
-    window.location.replace("/projets.html");
-    return;
-  }
-});
-</script>
-
-</head>
-
-
-
-<body class="no-scroll">
-  <canvas id="mouse-trail-canvas"></canvas>
-
-  <div id="container">
-    <span class="text-item recent" data-images="images/frfr1.png, images/frfr2.png"><a href="https://alexouilleuh.github.io/frfr/" target="_blank">Festival du Rhin</a></span>
-    <span class="text-item" data-images="images/memoire1.jpg,images/memoire2.jpg,images/memoire3.jpg,images/memoire4.jpg,images/memoire5.jpg,images/memoire6.jpg,images/memoire7.jpg,images/memoire8.jpg">Le déploiement d'une identité pour les musées d'art contemporain</span>
-    <span class="text-item" data-images="images/bv1.webp,images/bv2.webp">Bonnes vacances !</span>
-    <span class="text-item" data-images="images/mosaiqut1.webp,images/mosaiqut2.webp,images/mosaiqut3.webp">MosaïQut</span>
-    <span class="text-item" data-images="images/rumeurs1.webp,images/rumeurs2.webp,images/rumeurs3.webp,images/rumeurs4.webp,images/rumeurs5.webp">Rumeurs</span>
-    <span class="text-item" data-images="images/sundayrunner1.webp,images/sundayrunner2.webp,images/sundayrunner3.webp,images/sundayrunner4.webp,images/sundayrunner5.webp">Sunday Runner</span>
-    <span class="text-item" data-images="images/romanesque1.webp,images/romanesque2.webp,images/romanesque3.webp,images/romanesque4.webp,images/romanesque5.webp,images/romanesque6.webp,images/romanesque7.webp,images/romanesque8.webp,images/romanesque9.webp">Romanesque</span>
-    <span class="text-item no-image" data-images="">MicMacType</span>
-    <span class="text-item" data-images="images/cancan1.webp,images/cancan2.webp,images/cancan3.webp,images/cancan4.webp">Produire sans détruire</span>
-    <span class="text-item" data-images="images/fouilles1.webp,images/fouilles2.webp,images/fouilles3.webp,images/fouilles4.webp">Fouilles Géo·graphiques</span>
-    <span class="text-item" data-images="images/hem1.webp,images/hem2.webp,images/hem3.webp,images/hem4.webp,images/hem5.webp,images/hem6.webp,images/hem7.webp,images/hem8.webp,images/hem9.webp,images/hem10.webp">Une vie dédiée aux caractères&nbsp: Hans Eduard Meier</span>
-    <span class="text-item" data-images="images/carto1.webp,images/carto2.webp,images/carto3.webp,images/carto4.webp">Les châteaux du Médoc</span>
-    <span class="text-item" data-images="images/tenk1.webp,images/tenk2.webp,images/tenk3.webp">Festival Dokument</span>
-    <span class="text-item" data-images="images/agila1.jpg,images/agila2.webp">Agila</span>
-    <span class="text-item no-image" data-images="">Le stade comme terrain de jeu</span>
-    <span class="text-item" data-images="images/fifib1.webp">Festival International du Film Indépendant de Bordeaux (FIFIB)</span>
-    <span class="text-item" data-images="images/carrecol1.webp,images/carrecol2.webp,images/carrecol3.webp,images/carrecol4.webp">Scène Nationale du Carré Colonnes</span>
-    <span class="text-item" data-images="images/rega1.webp,images/rega2.webp">Réchauffement graphique</span>
-    <span class="text-item no-image" data-images="">Rencontres Photographique d'Arles</span>
- 
-  </div>
-
-<img id="hover-image-homepage-a" class="hover-image" />
-<img id="hover-image-homepage-b" class="hover-image" />
-
-  <footer class="navbar navbar-grid">
-    <div class="col"><a href="alexis.html">Alexis Brémond</a></div>
-    <div class="col"><a href="projets.html">Index</a></div>
-    <div class="col"><a href="AB_PORT.pdf" target="_blank">Portfolio</a></div>
-    <div class="col last-col-group">
-      <a href="https://www.instagram.com/aleqsou/" target="_blank">Instagram</a>
-      <div class="col">
-      <div id="toggle-eye" class="eye-off">
-        <div class="pupil"></div>
+  <div id="navbar">
+    <div id="navbar-left">
+      <a class="nav-link" href="index.html">Alexis Brémond</a>
+      <div class="business-card only-desktop">
+        <span class="card-name"></span>
+        <span class="card-role">Graphic, editorial, brand, type, web</span>
+        <span class="card-contact"><br><br><br>alexbrem04@gmail.com<br>+33 <span class="flou"> 1 23 45 67 89 </span> <br>@aleqsou</span>
+        <span class="card-skills">design</span>
       </div>
     </div>
-  </footer>
-<script src="script.js"></script>
-<script src="favicon.js"></script>
-</body>
+    <div id="navbar-right">
+      <a class="nav-link active only-desktop" href="index.html">Atlas,</a>
+      <a class="nav-link" href="projets.html">Index,</a>
+      <a class="nav-link" href="infos.html">Infos,</a>
+      <a class="nav-link" href="photos.html">Photos</a></div>
+  </div>
 
+    <canvas id="mouse-trail-canvas"></canvas>
+
+    <div id="container">
+      
+      <span class="text-item" data-images="images/propaganda1.webp,images/propaganda2.webp,images/propaganda3.webp,images/propaganda4.webp" data-type="Édition + photographie" data-year="2026">
+        Propaganda
+      </span>
+
+      <span class="text-item" data-images="images/frfr1.webp, images/frfr3.webp, images/frfr-video-outil.webm, images/frfr4.webp, images/frfr-video-seri.webm, images/frfr5.webp, images/frfr2.webp" data-type="Identité + outil" data-year="2026">
+        <a href="https://alexouilleuh.github.io/frfr/" target="_blank">
+          Festival du Rhin, <br class='only-mobile'>du fleuve et des rivières</a>
+      </span>
+
+      <span class="text-item" data-images="images/memoire1.jpg,images/memoire2.jpg,images/memoire3.jpg,images/memoire4.jpg,images/memoire5.jpg,images/memoire6.jpg,images/memoire7.jpg,images/memoire8.jpg"data-type="Mémoire" data-year="2025">
+        Le déploiement d'une identité pour les musées d'art contemporain
+      </span>
+
+      <span class="text-item" data-images="images/bv1.webp,images/bv2.webp" data-type="Photographie" data-year="2025">
+        Bonnes vacances !
+      </span>
+
+      <span class="text-item" data-images="images/mosaiqut1.webp, images/mosaiqut5.jpg,images/mosaiqut2.webp,images/mosaiqut3.webp,images/mosaiqut4.webp," data-type="Outil" data-year="2025">
+        MosaïQut
+      </span>
+
+      <span class="text-item" data-images="images/rumeurs1.webp,images/rumeurs2.webp,images/rumeurs3.webp,images/rumeurs4.webp,images/rumeurs5.webp" data-type="Photographie" data-year="2025">
+        Rumeurs
+      </span>
+
+      <span class="text-item" data-images="images/sundayrunner1.webp,images/sundayrunner2.webp,images/sundayrunner3.webp" data-type="Textile" data-year="2025">
+        Sunday Runner
+      </span>
+
+      <span class="text-item" data-images="images/romanesque1.webp,images/romanesque2.webp,images/romanesque3.webp,images/romanesque4.webp,images/romanesque5.webp,images/romanesque6.webp,images/romanesque7.webp,images/romanesque8.webp,images/romanesque9.webp" data-type="Dessin de caractères" data-year="2025">
+        Romanesque
+      </span>
+      
+      <span class="text-item no-image caché only-mobile " data-images="" data-type="Outil" data-year="2025">
+        MicMacType
+      </span>
+      
+      <span class="text-item only-mobile" data-images="images/cancan1.webp,images/cancan2.webp,images/cancan3.webp,images/cancan4.webp" data-type="Workshop" data-year="2025">
+        Produire sans détruire
+      </span>
+
+      <span class="text-item only-mobile" data-images="images/fouilles1.webp,images/fouilles2.webp,images/fouilles3.webp,images/fouilles4.webp" data-type="Signalétique" data-year="2025">
+        Fouilles Géo·graphiques
+      </span>
+      
+      <span class="text-item" data-images="images/hem1.webp,images/hem2.webp,images/hem3.webp,images/hem4.webp,images/hem5.webp,images/hem6.webp,images/hem7.webp,images/hem8.webp,images/hem9.webp,images/hem10.webp" data-type="Édition" data-year="2024">
+        Une vie dédiée aux caractères&nbsp: Hans Eduard Meier
+      </span>
+
+      <span class="text-item only-mobile" data-images="images/carto1.webp,images/carto2.webp,images/carto3.webp,images/carto4.webp" data-type="Illustration" data-year="2024">
+        Les châteaux du Médoc
+      </span>
+
+      <span class="text-item" data-images="images/tenk1.webp,images/tenk2.webp,images/tenk3.webp" data-type="Communication" data-year="2024">
+        Festival Dokument
+      </span>
+
+      <span class="text-item" data-images="images/agila0.png,images/agila2.webp,images/agila3.webp, images/agila4.jpg,images/agila5.jpg,images/agila6.jpg,images/agila1.webm,images/agila4.webp,images/agila5.webm" data-type="Dessin de caractères" data-year="2024">
+        Agila
+      </span>
+
+      <span class="text-item no-image" data-images="" data-type="Mémoire" data-year="2024">
+        Le stade comme terrain de jeu
+      </span>
+
+      <span class="text-item only-mobile" data-images="images/fifib1.webp" data-type="Communication" data-year="2023">
+        Festival International du Film Indépendant de Bordeaux (FIFIB)
+      </span>
+
+      <span class="text-item only-mobile" data-images="images/carrecol1.webp,images/carrecol2.webp,images/carrecol3.webp,images/carrecol4.webp" data-type="Communication" data-year="2023">
+        Scène Nationale du Carré Colonnes
+      </span>
+    
+      <span class="text-item only-mobile" data-images="images/rega0.jpeg,images/rega1.webp,images/rega2.webp" data-type="Exposition" data-year="2022">
+        Réchauffement graphique
+      </span>
+
+      <span class="text-item no-image" data-images="" data-type="Communication" data-year="2024">
+        Rencontres Photographique d'Arles
+      </span>
+    </div>
+
+    <div id="container-mobile"></div>
+
+  <div id="hover-image-homepage-a" class="hover-media"></div>
+  <div id="hover-image-homepage-b" class="hover-media"></div>
+
+    <script src="color.js"></script>
+    <script src="script.js"></script>
+    <script src="favicon.js"></script>
+    <script>
+      // mobile : un clic sur "Alexis Brémond" affiche / masque la carte de visite
+      // (sur desktop, le survol CSS s'en charge et le lien reste un lien normal)
+      (function () {
+        const mq = window.matchMedia(MOBILE_LAYOUT_QUERY); // color.js
+        const navbar = document.getElementById("navbar");
+        const title = document.querySelector("#navbar-left > a");
+        if (!navbar || !title) return;
+
+        // hauteur de la carte = jusqu'à 1em au-dessus du titre du 1er projet
+        // (position qui varie avec la hauteur de l'écran et les lignes du titre)
+        function updateCardHeight() {
+          const first = document.querySelector(".mobile-project-title");
+          if (!first) return;
+          const em = parseFloat(getComputedStyle(document.body).fontSize);
+          // <body> est le conteneur qui défile sur mobile (voir shared.css)
+          const top = first.getBoundingClientRect().top + document.body.scrollTop;
+          navbar.style.setProperty("--card-h", Math.max(0, top - em) + "px");
+        }
+        window.addEventListener("resize", updateCardHeight);
+
+        title.addEventListener("click", (e) => {
+          if (!mq.matches) return; // desktop : comportement normal
+          e.preventDefault();      // on reste sur la page d'accueil
+          updateCardHeight();
+          const open = navbar.classList.toggle("card-open");
+          title.setAttribute("aria-expanded", open);
+        });
+
+        // si on repasse en desktop (rotation, redimensionnement) : on ferme la carte
+        mq.addEventListener("change", () => {
+          navbar.classList.remove("card-open");
+          title.removeAttribute("aria-expanded");
+        });
+      })();
+    </script>
+  </body>
 </html>
