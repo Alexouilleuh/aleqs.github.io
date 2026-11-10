@@ -471,6 +471,10 @@ display: none;
   font-size: 0.5em;
   margin-right: 0;
   color: rgb(70, 70, 70);
+  hyphens: none;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
 }
 
 /* Moi */
@@ -932,6 +936,17 @@ body.page-photos {
 
   /* -- contenu -- */
 
+
+  /* projets hors accueil : texte et filet grisés (mobile, page Index uniquement) */
+  .project-row.hors-accueil,
+  .project-row.hors-accueil:hover:not(.no-image) {
+    color: rgb(70, 70, 70);
+    border-bottom-color: rgb(70, 70, 70);
+  }
+
+  .project-row.hors-accueil:has(+ .project-row:hover:not(.no-image)) {
+    border-bottom-color: rgb(70, 70, 70);
+  }
 
   #container-index {
     margin: 17em 1.1em 0em 1.1em;
